@@ -1,0 +1,1211 @@
+:root {
+    --couleurFondPage: #faf8f8;
+    --policeBlanche: rgb(255, 255, 255);
+    --policeNoire: rgb(29, 29, 29);
+    --policeGrisee: rgb(142, 142, 142);
+    --globalRadius: 5px;
+
+    --couleurMiseEnForme: rgb(242, 241, 236);
+    --couleurBouton: #24518c;
+    --couleurBoutonHover: #0c305f;
+    --couleurFocus: var(--couleurBoutonHover);
+    --couleurBoutonAnnuler: #ff7474;
+    --couleurBoutonAnnulerHover: darkred;
+    --couleurBoutonValider: #8bc196;
+    --couleurBoutonValiderHover: #3e7449;
+    --couleurRadioHover: rgba(100, 100, 100,0.3);
+    --couleurPopupEdit: #67c1e4;
+    --couleurMenu: #234f7b;
+    --couleurFondMenuMobile: rgba(255, 255, 255, 0.959);
+    --couleurHover: #173358;
+    --couleurHoverMenuTexte: var(--policeBlanche);
+    --couleurMenuActif: rgb(154, 221, 254);
+}
+
+@font-face {
+    src: url(../fonts/WorkSans-Medium.ttf);
+    font-family: WorkSans;
+}
+
+/* Ne fonctionne pas sur tous les navigateurs */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+   opacity: 1;
+}
+body::-webkit-scrollbar {
+    width: 13px;
+}
+body::-webkit-scrollbar-track {
+    background: #fff;
+    margin: 5px;
+    border-radius: 5px;
+}
+body::-webkit-scrollbar-thumb {
+    background-color: var(--couleurBouton);
+    border: 2px solid #fff;
+    border-radius: 50px;
+}
+body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--couleurBoutonHover);
+}
+body::-webkit-scrollbar-thumb:active {
+    background-color: var(--couleurBoutonHover);
+}
+body {
+    background-color: var(--couleurFondPage);
+    display: grid;
+    /* padding: 0;
+    margin: 0; */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+form {
+    display: grid;
+    font-family: WorkSans;
+    font-size: .85em;
+}
+
+h1 {
+    font-family: WorkSans;
+    font-size: 2em;
+    color: var(--couleurBoutonHover);
+    margin-top: 70px;
+    margin-left: 20px;
+}
+
+h2 {
+    font-family: WorkSans;
+    color: var(--policeBlanche);
+    text-align: center;
+    font-size: 1em;
+}
+
+a {
+    text-decoration: none;
+    font-size: .85em;
+    color: var(--policeBlanche);
+}
+
+input:not(input[type="radio"], input[type="checkbox"]) {
+    border-radius: var(--globalRadius);
+    border-style: none;
+    padding: 12px;
+    margin: 20px;
+    font-family: WorkSans;
+    font-size: 1em;
+    color: var(--policeNoire);
+    width: 80%;
+}
+
+input:focus {
+    outline: var(--couleurFocus) solid 2px;
+}
+
+input::placeholder {
+    font-family: WorkSans;
+    font-size: 0.9em;
+    color: var(--policeGrisee);
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .radioLabel {
+    background-color: var(--couleurBoutonHover);
+    color: var(--policeBlanche);
+}
+
+input[type="radio"]:checked + .radioLabel::before {
+    height: 8px;
+    width: 8px;
+    border: 4px solid var(--policeBlanche);
+}
+.radioLabel {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    border: 2px solid var(--couleurBoutonHover);
+    border-radius: var(--globalRadius);
+    padding: 3px;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.radioLabel:hover {
+    animation: hoverWaveRadio .2s cubic-bezier(.16,.83,.59,.91);
+}
+.radioLabel::before {
+    content: "";
+    height: 12px;
+    width: 12px;
+    border: 2px solid var(--couleurBoutonHover);
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+@keyframes hoverWaveRadio {
+    0% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 0%, transparent 0);
+
+    }
+    10% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 20%, transparent 0);
+
+    }
+    20% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 40%, transparent 0);
+
+    }
+    30% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 60%, transparent 0);
+
+    }
+    40% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 80%, transparent 0);
+
+    }
+    50% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 100%, transparent 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 80%, transparent 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 60%, transparent 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 40%, transparent 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 20%, transparent 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurRadioHover) 0 0%, transparent 0);
+
+    }
+}
+
+select {
+    border-radius: var(--globalRadius);
+    border-style: none;
+    padding: 12px;
+    margin: 20px;
+    font-family: WorkSans;
+    font-size: 1em;
+    color: var(--policeNoire);
+    width: 85%;
+}
+
+button {
+    border-radius: var(--globalRadius);
+    border-style: none;
+    padding: 12px;
+    margin: 20px;
+    color: var(--policeGrisee);
+    font-family: WorkSans;
+    font-size: 1em;
+}
+
+button:focus {
+    outline: var(--couleurFocus) solid 2px;
+}
+
+table {
+    margin: 20px;
+    border-collapse: separate;
+    text-align: center;
+    align-items: center;
+    justify-items: center;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #cfe6cb;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #e5f2e0;
+}
+
+td {
+    border-left: solid 1px var(--couleurBoutonHover);
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+td:first-child {
+    border-left: solid 1px transparent;
+    border-top-left-radius: var(--globalRadius);
+    border-bottom-left-radius: var(--globalRadius);
+}
+
+td:last-child {
+    border-right: solid 1px transparent;
+    border-bottom-right-radius: var(--globalRadius);
+    border-top-right-radius: var(--globalRadius);
+}
+
+input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+}
+
+input[type="checkbox"]:checked {
+    accent-color: var(--couleurBouton);
+}
+/* MENU pc */
+.logo {
+    position: absolute;
+    top: 3px;
+    left: 20px;
+    width: 100px;
+}
+nav a {
+    font-family: WorkSans; 
+}
+.navbar {
+    position: absolute;
+    padding: 50px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    z-index: 2;
+    background-color: var(--couleurMenu);
+    border-radius: 0;
+}
+.navbar .separateur::after {
+    content: "|";
+}
+.navbar .nav-links .nav-ul {
+    display: flex;
+    text-align: center;
+    list-style: none;
+}
+.navbar .nav-links .nav-ul li{
+    margin-left: 15px;
+    margin-right: 15px;
+    font-size: 1.1em;
+}
+.navbar .nav-links .nav-ul li a:not(.center):not(.lienBoutonDeconnexion) {
+    padding: 8px;
+}
+.navbar .nav-links .nav-ul li a:not(.center):not(.active):not(.lienBoutonDeconnexion):hover {
+    background-color: var(--couleurHover);
+    color: var(--couleurHoverMenuTexte);
+    padding: 8px;
+    border-radius: var(--globalRadius);
+}
+.sousMenu {
+    position: absolute;
+    margin-top: 6px;
+    list-style: none;
+    text-align: center;
+    display: none;
+    width: max-content;
+    background-color: #f2f3f3;
+    border-radius: var(--globalRadius);
+    padding-top: 14px;
+}
+.navbar .nav-links .nav-ul ul.sousMenu {
+    /* margin-left: -45px; */
+    justify-self: center;
+    align-self: center;
+}
+.navbar .nav-links .nav-ul .sousMenu li a {
+    color: var(--couleurBoutonHover);
+    font-size: .75em;
+}
+.navbar .nav-links .nav-ul .sousMenu li{
+    margin-bottom: 15px;
+}
+.navbar .nav-ul > li:hover .sousMenu {
+    display: block;
+}
+.navbar .menu-hamburger {
+    position: absolute;
+    display: none;
+    padding: 7px;
+    right: 5px;
+    top: 5px;
+    width: 35px;
+    z-index: 2;
+}
+.menu-hamburger:hover {
+    background-color: var(--couleurHover);
+    border-radius: var(--globalRadius);
+    cursor: pointer;
+}
+.active {
+    color: var(--couleurBoutonHover);
+    font-weight: bolder;
+    border-radius: var(--globalRadius);
+    background-color: var(--couleurMenuActif);
+    padding: 8px;
+    box-shadow: 5px 5px 0px .1px #01534f;
+}
+.active:after {
+    content: url(../images/left-arrow.png);
+    justify-content: center;
+    vertical-align: middle;
+}
+/* Phone navbar 1062px*/
+@media screen and (max-width: 1062px) {
+    .navbar {
+        position: fixed;
+        padding: 0px;
+        width: 100%;
+    }
+    .navbar .logo {
+        z-index: 1;
+    }
+    .navbar .fondMobile {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        background-color: var(--couleurMenu);
+        width: 100%;
+        height: 60px;
+    }
+    .navbar .menu-hamburger {
+        display: block;
+    }
+    .nav-links {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        padding: 0;
+        margin: 0;
+        margin-left: -100%;
+        background-color: var(--couleurFondMenuMobile);
+        width: 100%;
+        height: 100vh;
+        transition: all .4s cubic-bezier(.86,.16,.28,1.24);
+    }
+    .nav-links.mobile-menu {
+        margin-left: 0;
+    }
+    .nav-links .nav-ul {
+        margin-top: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .navbar .nav-links .nav-ul li:not(.sousMenu) {
+        margin-bottom: 0;
+        font-size: 1.4em;
+    }
+    .navbar .nav-links .nav-ul li:not(:first-child):not(.sousMenu) {
+        margin-bottom: 0;
+        margin-top: 20px;
+    }
+    .navbar ul.sousMenu {
+        margin-top: 6px;
+        padding: 10px;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    .navbar .sousMenu li:first-child {
+        margin-top: 0;
+    }
+    .navbar .separateur::after {
+        content: "______________________________";
+    }
+    .sousMenu {
+        position: initial;
+        font-size: .75em;
+        border-radius: var(--globalRadius);
+    }
+}
+
+#miseEnFormeFormulaire {
+    margin: 12%;
+    margin-top: 40px;
+    margin-bottom: 5%;
+    grid-template-columns: 1fr;
+}
+
+.miseEnForme {
+    background-color: var(--couleurMiseEnForme);
+    border-radius: 10px;
+    padding: 15px;
+    align-items: center;
+    justify-items: center;
+    box-shadow: -10px 10px 0px .1px #01534f;
+}
+
+div.miseEnForme {
+    /*ici responsive*/
+    display: grid;
+    grid-gap: 5px;
+}
+div.miseEnForme label {
+    text-align: left;
+    margin-left: 10%;
+    width: 100%;
+}
+
+.logo {
+    width: 30px;
+}
+#imageJoueur {
+    max-width: 100px;
+    border-radius: 50%;
+}
+#boutonsValiderAnnuler {
+    position: relative;
+    top: 10px;
+}
+.center {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-items: center;
+}
+.centerRadio {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-items: center;
+}
+
+.center1Item {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-items: center;
+}
+
+.centerIconeChamp {
+    display: grid;
+    margin-right: 5px;
+    grid-template-columns: max-content 1fr;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-items: center;
+}
+.boutons {
+    color:var(--policeBlanche);
+    background-color: var(--couleurBouton);
+    padding: 9px;
+}
+.boutons:hover {
+    animation: hoverWave .15s cubic-bezier(.16,.83,.59,.91) forwards;
+    cursor: pointer;
+}
+.boutons:active {
+    animation: hoverClick .1s cubic-bezier(.16,.83,.59,.91) forwards;
+}
+
+.boutonAnnuler {
+    background-color: var(--couleurBoutonAnnuler);
+    color:var(--policeBlanche);
+    padding: 9px;
+}
+.boutonAnnuler:hover {
+    animation: hoverWaveAnnuler .15s cubic-bezier(.16,.83,.59,.91) forwards;
+    cursor: pointer;
+}
+.boutonAnnuler:active {
+    animation: hoverClickAnnuler .1s cubic-bezier(.16,.83,.59,.91) forwards;
+}
+
+.boutonValider {
+    background-color: var(--couleurBoutonValider);
+    color:var(--policeBlanche);
+    padding: 9px;
+}
+.boutonValider:hover {
+    animation: hoverWaveValider .15s cubic-bezier(.16,.83,.59,.91) forwards;
+    cursor: pointer;
+}
+.boutonValider:active {
+    animation: hoverClickValider .1s cubic-bezier(.16,.83,.59,.91) forwards;
+}
+
+.boutonSupprimer {
+    background-color: var(--couleurBoutonAnnuler);
+    color:var(--policeBlanche);
+    padding: 3px;
+    margin: 7px;
+}
+.boutonSupprimer:hover {
+    animation: hoverWaveAnnuler .15s cubic-bezier(.16,.83,.59,.91) forwards;
+    cursor: pointer;
+}
+.boutonSupprimer:active {
+    animation: hoverClickAnnuler .1s cubic-bezier(.16,.83,.59,.91) forwards;
+}
+
+.boutonModifier {
+    background-color: var(--couleurPopupEdit);
+    color:var(--policeBlanche);
+    padding: 3px;
+    margin: 7px;
+}
+.boutonModifier:hover {
+    animation: hoverWaveModifier .15s cubic-bezier(.16,.83,.59,.91) forwards;
+    cursor: pointer;
+}
+.boutonModifier:active {
+    animation: hoverClickModifier .1s cubic-bezier(.16,.83,.59,.91) forwards;
+}
+.boutonEdit {
+    background-color: var(--couleurPopupEdit);
+    color:var(--policeBlanche);
+    padding: 9px;
+}
+.boutonEdit:hover {
+    animation: hoverWaveModifier .15s cubic-bezier(.16,.83,.59,.91) forwards;
+    cursor: pointer;
+}
+.boutonEdit:active {
+    animation: hoverWaveModifier .1s cubic-bezier(.16,.83,.59,.91) forwards;
+}
+
+@keyframes hoverWave {
+    0% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 0%, var(--couleurBouton) 0);
+
+    }
+    10% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 10%, var(--couleurBouton) 0);
+
+    }
+    20% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 20%, var(--couleurBouton) 0);
+
+    }
+    30% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 30%, var(--couleurBouton) 0);
+
+    }
+    40% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 40%, var(--couleurBouton) 0);
+
+    }
+    50% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 50%, var(--couleurBouton) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 60%, var(--couleurBouton) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 70%, var(--couleurBouton) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 80%, var(--couleurBouton) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 90%, var(--couleurBouton) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 100%, var(--couleurBouton) 0);
+
+    }
+}
+@keyframes hoverClick {
+    50% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 10%, var(--couleurBouton) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 30%, var(--couleurBouton) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 40%, var(--couleurBouton) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 30%, var(--couleurBouton) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 10%, var(--couleurBouton) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 0%, var(--couleurBouton) 0);
+
+    }
+}
+@keyframes hoverWaveAnnuler {
+    0% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 0%, var(--couleurBouton) 0);
+    }
+    10% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 10%, var(--couleurBouton) 0);
+
+    }
+    20% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 20%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    30% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 30%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    40% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 40%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    50% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 50%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 60%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 70%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 80%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 90%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnulerHover) 0 100%, var(--couleurBoutonAnnuler) 0);
+
+    }
+}
+@keyframes hoverClickAnnuler {
+    50% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnuler) 0 10%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnuler) 0 30%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnuler) 0 40%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnuler) 0 30%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnuler) 0 10%, var(--couleurBoutonAnnuler) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurBoutonAnnuler) 0 0%, var(--couleurBoutonAnnuler) 0);
+
+    }
+}
+@keyframes hoverWaveValider {
+    0% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 0%, var(--couleurBoutonValider) 0);
+    }
+    10% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 10%, var(--couleurBoutonValider) 0);
+
+    }
+    20% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 20%, var(--couleurBoutonValider) 0);
+
+    }
+    30% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 30%, var(--couleurBoutonValider) 0);
+
+    }
+    40% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 40%, var(--couleurBoutonValider) 0);
+
+    }
+    50% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 50%, var(--couleurBoutonValider) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 60%, var(--couleurBoutonValider) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 70%, var(--couleurBoutonValider) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 80%, var(--couleurBoutonValider) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 90%, var(--couleurBoutonValider) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValiderHover) 0 100%, var(--couleurBoutonValider) 0);
+
+    }
+}
+@keyframes hoverClickValider {
+    50% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValider) 0 10%, var(--couleurBoutonValider) 0);
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValider) 0 30%, var(--couleurBoutonValider) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValider) 0 40%, var(--couleurBoutonValider) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValider) 0 30%, var(--couleurBoutonValider) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValider) 0 10%, var(--couleurBoutonValider) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurBoutonValider) 0 0%, var(--couleurBoutonValider) 0);
+    }
+}
+@keyframes hoverWaveEdit {
+    0% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 0%, var(--couleurBouton) 0);
+
+    }
+    10% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 10%, var(--couleurBouton) 0);
+
+    }
+    20% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 20%, var(--couleurBouton) 0);
+
+    }
+    30% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 30%, var(--couleurBouton) 0);
+
+    }
+    40% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 40%, var(--couleurBouton) 0);
+
+    }
+    50% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 50%, var(--couleurBouton) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 60%, var(--couleurBouton) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 70%, var(--couleurBouton) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 80%, var(--couleurBouton) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 90%, var(--couleurBouton) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 100%, var(--couleurBouton) 0);
+
+    }
+}
+@keyframes hoverClickEdit {
+    50% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 10%, var(--couleurBouton) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 30%, var(--couleurBouton) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 40%, var(--couleurBouton) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 30%, var(--couleurBouton) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 10%, var(--couleurBouton) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurBouton) 0 0%, var(--couleurBouton) 0);
+
+    }
+}
+@keyframes hoverWaveModifier {
+    0% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 0%, var(--couleurPopupEdit) 0);
+
+    }
+    10% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 10%, var(--couleurPopupEdit) 0);
+
+    }
+    20% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 20%, var(--couleurPopupEdit) 0);
+
+    }
+    30% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 30%, var(--couleurPopupEdit) 0);
+
+    }
+    40% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 40%, var(--couleurPopupEdit) 0);
+
+    }
+    50% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 50%, var(--couleurPopupEdit) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 60%, var(--couleurPopupEdit) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 70%, var(--couleurPopupEdit) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 80%, var(--couleurPopupEdit) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 90%, var(--couleurPopupEdit) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurMenuActif) 0 100%, var(--couleurPopupEdit) 0);
+
+    }
+}
+@keyframes hoverClickModifier {
+    50% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 10%, var(--couleurPopupEdit) 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 30%, var(--couleurPopupEdit) 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 40%, var(--couleurPopupEdit) 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 30%, var(--couleurPopupEdit) 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 10%, var(--couleurPopupEdit) 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, var(--couleurPopupEdit) 0 0%, var(--couleurPopupEdit) 0);
+
+    }
+}
+
+.imageIcone {
+    width: 30px;
+}
+
+.centerIcon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.txtPopup {
+    margin-top: 25px;
+}
+
+.boutonFermerPopup {
+    position: absolute;
+    top: 0;
+    right:0;
+    margin: 0;
+    padding: 5px;
+    background: none;
+    color: var(--policeBlanche);
+    font-size: .80em;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.boutonFermerPopup:focus {
+    outline-color: var(--policeBlanche);
+}
+
+.validationPopup {
+    display: block;
+    position: fixed;
+    top: 50px;
+    background-color: var(--couleurBoutonValider);
+    border-radius: var(--globalRadius);
+    padding: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 10%;
+    margin-right: 10%;
+    align-self: center;
+    justify-self: center;
+    z-index: 3;
+}
+
+.erreurPopup {
+    display: block;
+    position: fixed;
+    top: 50px;
+    background-color: var(--couleurBoutonAnnuler);
+    border-radius: var(--globalRadius);
+    padding: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 10%;
+    margin-right: 10%;
+    align-self: center;
+    justify-self: center;
+    z-index: 3;
+}
+
+.supprPopup {
+    display: block;
+    position: fixed;
+    top: 50px;
+    background-color: var(--couleurBoutonAnnuler);
+    border-radius: var(--globalRadius);
+    padding: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 10%;
+    margin-right: 10%;
+    align-self: center;
+    justify-self: center;
+    z-index: 3;
+}
+
+.editPopup {
+    display: block;
+    position: fixed;
+    top: 50px;
+    background-color: var(--couleurPopupEdit);
+    border-radius: var(--globalRadius);
+    padding: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 10%;
+    margin-right: 10%;
+    align-self: center;
+    justify-self: center;
+    z-index: 3;
+}
+
+.alertPopup {
+    display: block;
+    position: fixed;
+    top: 50px;
+    background-color: #ff944d;
+    border-radius: var(--globalRadius);
+    padding: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 10%;
+    margin-right: 10%;
+    align-self: center;
+    justify-self: center;
+    z-index: 3;
+}
+
+.svgWaveContains {
+    position:fixed;
+    height: 5%;
+    width:100%;
+    top:0px;
+    left:0;
+    z-index: -1;
+}
+
+.svgWave {
+    position: absolute;
+    background: url(../images/wave.svg) repeat-x;
+    height: 198px;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+}
+
+#boutonsValiderAnnuler {
+    position: relative;
+    top: 10px;
+}
+
+::file-selector-button {
+    color: var(--policeBlanche);
+    background-color: var(--couleurBouton);
+    padding: 9px;
+    border-radius: var(--globalRadius);
+    border-style: none;
+    font-family: WorkSans;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+::file-selector-button:hover {
+    background-color: var(--couleurBoutonHover);
+}
+
+/* DANS LE PC */
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 1.5em;
+    }
+    h2 {
+        font-size: .9em;
+    }
+    .boutonAnnuler .imageIcone {
+        width: 20px;
+        margin: 0px;
+    }
+    .boutonValider .imageIcone {
+        width: 20px;
+        margin: 0px;
+    }
+    .boutonEdit .imageIcone {
+        width: 20px;
+        margin: 0px;
+    }
+}
+@media screen and (min-width: 500px) {
+    #form {
+        margin-top: 5%;
+    }
+    #miseEnFormeFormulaire {
+        grid-template-columns: max-content 1fr .1fr;
+    }
+}
+@media screen and (max-width: 600px){
+    thead {
+        display: none;
+    }
+    table, table tbody, table tr, table td {
+        display: block;
+        width: auto;
+        border-left: none;
+    }   
+    table tr {
+        margin-bottom: 15px;
+        border-radius: var(--globalRadius);
+    }
+    table td {
+        margin: 10px;
+        padding-top: 5px;
+        position: relative;
+        text-align: right;
+        border-bottom: 1px solid var(--couleurBoutonValider);
+    }
+    table td:first-child {
+        padding-top: 20px;
+        border-radius: 0px;
+    }
+    table td:last-child {
+        border: none;
+    }
+    #tbodyGererJoueurs td::before{
+        position: absolute;
+        font-weight: bold;
+        font-size: 1.05em;
+        left: 0;
+        width: 50%;
+        text-align: left;
+    }
+    #tbodyGererJoueurs td:first-child::before{
+        content: "Photo :";
+    }
+    #tbodyGererJoueurs td:nth-child(2)::before{
+        content: "Nom :";
+    }
+    #tbodyGererJoueurs td:nth-child(3)::before{
+        content: "Prenom :";
+    }
+    #tbodyGererJoueurs td:nth-child(4)::before{
+        content: "Numero de licence :";
+    }
+    #tbodyGererJoueurs td:nth-child(5)::before{
+        content: "Date de naissance :";
+    }
+    #tbodyGererJoueurs td:nth-child(6)::before{
+        content: "Taille :";
+    }
+    #tbodyGererJoueurs td:nth-child(7)::before{
+        content: "Poids :";
+    }
+    #tbodyGererJoueurs td:nth-child(8)::before{
+        content: "Poste prefere :";
+    }
+    #tbodyGererJoueurs td:nth-child(9)::before{
+        content: "Statut :";
+    }
+    #tbodyGererJoueurs td:nth-child(10)::before{
+        content: "Commentaires :";
+    }
+}
+@media screen and (max-width: 700px) {
+    .boutonSupprimer .imageIcone {
+        width: 20px;
+        margin: 5px;
+    }
+    .boutonSupprimer span {
+        width: 20px;
+        margin: 5px;
+    }
+    .boutonModifier .imageIcone {
+        width: 20px;
+        margin: 5px;
+    }
+    .boutonModifier span {
+        width: 20px;
+        margin: 5px;
+    }
+}
