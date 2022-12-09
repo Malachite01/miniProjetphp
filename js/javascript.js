@@ -22,3 +22,21 @@ function refreshImageSelector(nomIdChamp,idImage) {
         document.getElementById(idImage).src = URL.createObjectURL(file);
     } 
 }
+
+function afficherMDP(nomIdChamp, nomIdOeil) {
+    var champ = document.getElementById(nomIdChamp);
+    var icone = document.getElementById(nomIdOeil);
+    if (champ.type === "password") {
+        champ.type = "text";
+        icone.src = "images/oeil.png";
+    } else {
+        champ.type = "password";
+        icone.src = "images/oeilFermé.png";
+    }
+}
+
+function limitKeypress(event, value, maxLength) {
+    if (value != undefined && value.toString().length >= maxLength) {
+        event.preventDefault();
+    }
+}

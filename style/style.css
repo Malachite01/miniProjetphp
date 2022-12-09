@@ -465,6 +465,66 @@ div.miseEnForme label {
     width: 100%;
 }
 
+.miseFormeConnexion {
+    background-color: var(--couleurBouton);
+    border-radius: 10px;
+    padding: 15px;
+    align-items: center;
+    justify-items: center;
+    box-shadow: -10px 10px 0px .1px var(--couleurHover);
+}
+
+div.miseFormeConnexion {
+    /*ici responsive*/
+    display: grid;
+    grid-gap: 5px;
+}
+div.miseFormeConnexion label {
+    text-align: left;
+    margin-left: 10%;
+    width: 100%;
+}
+#oeilMdp {
+    width: 25px;
+    height: 25px;
+}
+.iconeApp {
+    width: 50px;
+    margin-top: 45px;
+    margin-left: auto;
+    margin-right: auto;
+}
+@media screen and (min-width: 500px) {
+    #form {
+        margin-top: 5%;
+    }
+    #formConnexion {
+        margin-top: 5%;
+    }
+    #miseEnFormeConnexion {
+        grid-template-columns: max-content 1fr 0fr;
+    }
+    .iconeApp {
+        width: 150px;
+    }
+    #boutonConnexion {
+        margin-left: 25%;
+        margin-right: 25%;
+    }
+
+}
+@media screen and (min-width: 900px) {
+    #miseEnFormeConnexion {
+        margin: 25%;
+        margin-top: 0px;
+        margin-bottom: 5%;
+    }
+    #boutonConnexion {
+        color:var(--policeBlanche);
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+}
 .logo {
     width: 30px;
 }
@@ -1056,24 +1116,6 @@ div.miseEnForme label {
     align-self: center;
     justify-self: center;
     z-index: 3;
-}
-
-.svgWaveContains {
-    position:fixed;
-    height: 5%;
-    width:100%;
-    top:0px;
-    left:0;
-    z-index: -1;
-}
-
-.svgWave {
-    position: absolute;
-    background: url(../images/wave.svg) repeat-x;
-    height: 198px;
-    top: 0;
-    width: 100%;
-    z-index: -1;
 }
 
 #boutonsValiderAnnuler {

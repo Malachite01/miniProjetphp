@@ -40,7 +40,7 @@
       <span></span>
 
       <label for="champNumeroLicence">Numero de licence :</label>
-      <input type="number" name="champNumeroLicence" placeholder="Entrez la licence du joueur" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" min="1" max="9999999999999" required>
+      <input type="number" name="champNumeroLicence" placeholder="Entrez la licence du joueur" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" min="1" max="9999999999999" onkeypress="limitKeypress(event,this.value,11)" required>
       <span></span>
 
       <label for="champDateDeNaissance">Date de naissance :</label>
@@ -48,21 +48,21 @@
       <span></span>
 
       <label for="champTaille">Taille :</label>
-      <input type="number" name="champTaille" placeholder="Entrez la taille du joueur en cm" min="1" max="999" required>
+      <input type="number" name="champTaille" placeholder="Entrez la taille du joueur en cm" min="1" max="999" onkeypress="limitKeypress(event,this.value,3)" required>
       <span></span>
 
       <label for="champPoids">Poids :</label>
-      <input type="number" name="champPoids" placeholder="Entrez le poids du joueur en kg" min="1" max="999" required>
+      <input type="number" name="champPoids" placeholder="Entrez le poids du joueur en kg" min="1" max="999" onkeypress="limitKeypress(event,this.value,3)" required>
       <span></span>
 
       <label for="champPoste">Poste :</label>
       <select name="champPoste" id="" required>
         <option value="">--Veuillez choisir un poste--</option>
-        <option value="">Passeur</option>
-        <option value="">Receptionneur</option>
-        <option value="">Attaquant</option>
-        <option value="">Central</option>
-        <option value="">Libero</option>
+        <option value="Passeur">Passeur</option>
+        <option value="Receptionneur">Receptionneur</option>
+        <option value="Attaquant">Attaquant</option>
+        <option value="Central">Central</option>
+        <option value="Libero">Libero</option>
       </select>
       <span></span>
 
@@ -99,5 +99,52 @@
   </form>
   <script src="js/javascript.js"></script>
 </body>
+
+<?php
+  if (champRempli(array('champNom', 'champPrenom', 'champNumeroLicence', 'champDateDeNaissance', 'champTaille','champPoids'))) {
+    if (joueurIdentique(
+      $_POST['champNom'],
+      $_POST['champPrenom'],
+      $_POST['champNumeroLicence'],
+      $_POST['champDateDeNaissance']
+    ) == 0) {
+      if(uploadImage($_FILES['champPhoto']) != null) {
+        ajouterJoueur(
+          $_POST['champNom'],
+          $_POST['champPrenom'],
+          $_POST['champNumeroLicence'],
+          uploadImage($_FILES['champPhoto']),
+          $_POST['champDateDeNaissance'],
+          $_POST['champTaille'],
+          $_POST['champPoids'],
+          $_POST['champPoste'],
+          $_POST['champStatut'],
+          $_POST['champCommentaires']
+        );
+        echo '
+        <div class="validationPopup">
+          <h2 class="txtPopup">Le joueur a bien ete ajoute a la base !</h2>
+          <img src="images/valider.png" alt="valider" class="imageIcone centerIcon">
+          <button class="boutonFermerPopup" onclick="erasePopup(\'validationPopup\')">Fermer X</button>
+        </div>';
+      } else {
+        echo '
+        <div class="erreurPopup">
+          <h2 class="txtPopup">Erreur, image trop grande.</h2>
+          <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
+          <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
+        </div>';
+      }
+    } else {
+      echo'
+      <div class="erreurPopup">
+        <h2 class="txtPopup">Le joueur n\'a pas ete ajoute a la base car il existe deja.</h2>
+        <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
+        <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
+      </div>';
+    }
+  }
+  
+  ?>
 
 </html>
