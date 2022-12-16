@@ -21,11 +21,28 @@
     <div class="svgWave"></div>
   </div>
 
-  <?php faireMenu();?>
+  <?php 
+  faireMenu();
+  if (isset($_POST['boutonSupprimer'])) {
+    supprimerJoueur($_POST['boutonSupprimer']);
+    header("Location: gestionJoueurs.php?params=suppr");
+  };
+  if (isset($_GET['params'])) {
+    $err = clean($_GET['params']);
+    if ($err == 'suppr') {
+      echo '
+        <div class="supprPopup">
+          <h2 class="txtPopup">Le joueur a ete supprime.</h2>
+          <img src="images/bin.png" alt="image suppression" class="imageIcone centerIcon">
+          <button class="boutonFermerPopup" onclick="erasePopup(\'supprPopup\')">Fermer X</button>
+        </div>';
+    }
+  }
+  ?>
 
   <h1>Gestion des joueurs</h1>
 
-  <form id="formGestionMembre" method="POST">
+  <form id="formGestionJoueur" method="POST">
 
     <table>
       <thead>
@@ -38,10 +55,13 @@
         <th>Poids</th>
         <th>Poste prefere</th>
         <th>Statut</th>
+        <th>Supprimer</th>
       </thead>
 
       <tbody id="tbodyGererJoueurs">
-        <!-- function -->
+        <?php
+          AfficherJoueurs();
+        ?>  
       </tbody>
     </table>
   </form>

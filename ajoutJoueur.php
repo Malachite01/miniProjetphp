@@ -108,12 +108,13 @@
       $_POST['champNumeroLicence'],
       $_POST['champDateDeNaissance']
     ) == 0) {
-      if(uploadImage($_FILES['champPhoto']) != null) {
+      $image = uploadImage($_FILES['champPhoto']);
+      if($image != null) {
         ajouterJoueur(
           $_POST['champNom'],
           $_POST['champPrenom'],
           $_POST['champNumeroLicence'],
-          uploadImage($_FILES['champPhoto']),
+          $image,
           $_POST['champDateDeNaissance'],
           $_POST['champTaille'],
           $_POST['champPoids'],

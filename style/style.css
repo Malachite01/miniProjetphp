@@ -20,6 +20,8 @@
     --couleurHover: #173358;
     --couleurHoverMenuTexte: var(--policeBlanche);
     --couleurMenuActif: rgb(154, 221, 254);
+    --even: #cbd5e6;
+    --odd: #e0e8f2;
 }
 
 @font-face {
@@ -235,11 +237,11 @@ table {
 }
 
 table tbody tr:nth-child(even) {
-    background-color: #cfe6cb;
+    background-color: var(--even);
 }
 
 table tbody tr:nth-child(odd) {
-    background-color: #e5f2e0;
+    background-color: var(--odd);
 }
 
 td {
@@ -1250,4 +1252,9 @@ div.miseFormeConnexion label {
         width: 20px;
         margin: 5px;
     }
+}
+
+.imageJoueurGestion {
+    max-width: 70px;
+    border-radius: 200px;
 }

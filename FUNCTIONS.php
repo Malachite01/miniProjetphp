@@ -8,11 +8,13 @@ $qJoueurIdentique = 'SELECT Nom, Prenom,Numero_Licence, Date_Naissance FROM joue
 $qAjouterJoueur = 'INSERT INTO joueur (Nom,Prenom,Numero_Licence,Photo,Date_Naissance,Taille,Poids,Poste_Prefere,Statut,Commentaires) 
                     VALUES (:nom , :prenom, :numeroLicence,:photo,:dateNaissance, :taille, :poids,:postePrefere, :statut, :commentaires)';
 
+$qAfficherJoueurs = 'SELECT Id_Joueur, Photo, Nom, Prenom, Numero_Licence, Date_Naissance, Taille, Poids, Poste_Prefere, Statut FROM joueur';
+
+// requete pour supprimer un membre de la BD
+$qSupprimerJoueur = 'DELETE FROM joueur WHERE Id_Joueur = :idJoueur';
+
 function connexionBd()
 {
-    // parametre de connexion a la BD
-    // cDRvPP\2mwea(LGp
-    // https://test-saetrisomie21.000webhostapp.com/
     $SERVER = '127.0.0.1';
     $DB = 'miniprojetphp';
     $LOGIN = 'root';
@@ -187,5 +189,73 @@ function uploadImage($photo)
         return null;
     }
     return $result;
+}
+
+function AfficherJoueurs() {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAfficherJoueurs']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // execution de la requete sql
+    $req->execute();
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // permet de parcourir toutes les lignes de la requete
+    while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
+        echo '<tr>';
+        // permet de parcourir toutes les colonnes de la requete
+        foreach ($data as $key => $value) {
+            // recuperation valeurs importantes dans des variables
+            if ($key == 'Id_Joueur') {
+                $idJoueur = $value;
+            }
+            if($key == 'Photo') {
+                echo '<td><img class="imageJoueurGestion" src="' . $value . '" alt="photo du joueur"></td>';
+            }
+            // selectionne toutes les colonnes $key necessaires
+            if ($key == 'Nom' || $key == 'Prenom' || $key == 'Numero_Licence' || $key == 'Poste_Prefere' || $key == 'Statut') {
+                echo '<td>' . $value . '</td>';
+            }
+            if ($key == 'Date_Naissance') {
+                echo '<td>' . date('d/m/Y', strtotime($value)) . '</td>';
+            }
+            if( $key == 'Taille') {
+                echo '<td>' . $value . 'cm </td>';
+            }
+            if( $key == 'Poids') {
+                echo '<td>' . $value . 'kg </td>';
+            }
+        }
+        echo '
+            <td>
+                <button type="submit" name="boutonSupprimer" value="' . $idJoueur . '
+                " class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce membre ?\');" >
+                    <img src="images/bin.png" class="imageIcone" alt="icone supprimer">
+                    <span>Supprimer</span>
+                </button>
+            </td>
+        </tr>';
+    }
+}
+
+// fonction qui permet de supprimer un joueur a partir de son idJoueur
+function supprimerJoueur($idJoueur)
+{
+    // connexion a la base de donnees
+    $linkpdo = connexionBd();
+    //on supprime le membre
+    $req = $linkpdo->prepare($GLOBALS['qSupprimerJoueur']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour supprimer un joueur de la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idJoueur' => clean($idJoueur)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour supprimer un joueur de la BD');
+    }
 }
 ?>
