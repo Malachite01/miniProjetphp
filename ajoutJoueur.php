@@ -121,6 +121,7 @@
           $_POST['champStatut'],
           $_POST['champCommentaires']
         );
+        
         echo '
         <div class="validationPopup">
           <h2 class="txtPopup">Le joueur a bien ete ajoute a la base !</h2>
