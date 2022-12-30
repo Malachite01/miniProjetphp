@@ -282,7 +282,7 @@ nav a {
 }
 .navbar {
     position: absolute;
-    padding: 50px;
+    padding-right: 10%;
     padding-top: 15px;
     padding-bottom: 5px;
     display: flex;
@@ -299,7 +299,6 @@ nav a {
 }
 .navbar .nav-links .nav-ul {
     display: flex;
-    text-align: center;
     list-style: none;
 }
 .navbar .nav-links .nav-ul li{
@@ -357,17 +356,16 @@ nav a {
     cursor: pointer;
 }
 .active {
-    color: var(--couleurBoutonHover);
     font-weight: bolder;
     border-radius: var(--globalRadius);
-    background-color: var(--couleurMenuActif);
+    background-color: var(--couleurHover);
     padding: 8px;
-    box-shadow: 5px 5px 0px .1px #01534f;
 }
 .active:after {
     content: url(../images/left-arrow.png);
     justify-content: center;
     vertical-align: middle;
+    filter:brightness(5000%);
 }
 /* Phone navbar 1062px*/
 @media screen and (max-width: 1062px) {
@@ -1230,9 +1228,6 @@ div.miseFormeConnexion label {
     }
     #tbodyGererJoueurs td:nth-child(9)::before{
         content: "Statut :";
-    }
-    #tbodyGererJoueurs td:nth-child(10)::before{
-        content: "Commentaires :";
     }
 }
 @media screen and (max-width: 700px) {

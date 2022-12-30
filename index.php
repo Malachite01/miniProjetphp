@@ -30,16 +30,6 @@
             <?php
             break;
 
-            case 'courriel':
-            ?>
-              <div class="erreurPopup">
-                <h2 class="txtPopup">Erreur, e-mail incorrect</h2>
-                <img src="images/annuler.png" alt="image annuler" class="imageIcone centerIcon">
-                <button class="boutonFermerPopup" onclick="erasePopup('erreurPopup')">Fermer X</button>
-              </div>
-            <?php
-            break;
-
             case 'inexistant':
             ?>
               <div class="erreurPopup">
@@ -50,53 +40,22 @@
             <?php
             break;
 
-            case 'invalide':
-            ?>
-              <div class="alertPopup">
-                <h2 class="txtPopup">Erreur, votre compte est encore en attente de validation</h2>
-                <img src="images/wait.png" alt="image attente" class="imageIcone centerIcon">
-                <button class="boutonFermerPopup" onclick="erasePopup('alertPopup')">Fermer X</button>
-              </div>
-            <?php
-            break;
-
-            case 'deconnexion':
-            ?>
-              <div class="editPopup">
-                <h2 class="txtPopup">Vous avez bien été déconnecté</h2>
-                <img src="images/logout.png" alt="image deconnexion" class="imageIcone centerIcon">
-                <button class="boutonFermerPopup" onclick="erasePopup('editPopup')">Fermer X</button>
-              </div>
-            <?php
-            break;
-            case 'ajoutMembre':
-            ?>
-              <div class="validationPopup">
-                <h2 class="txtPopup">Une demande de création de compte a bien été envoyée! Votre compte est désormais en attente de validation</h2>
-                <img src="images/valider.png" alt="valider" class="imageIcone centerIcon">
-                <button class="boutonFermerPopup" onclick="erasePopup('validationPopup')">Fermer X</button>
-              </div>
-            <?php
-            break;
         }
     }
   ?> 
   
   <div class="test"></div>
   <img src="images/logo.png" alt="logo application" class="iconeApp"> 
-  
   <form id="formConnexion" action="indexConnexion.php" method="POST">
     <div class="miseFormeConnexion" id="miseEnFormeConnexion">
       <label for="champIdentifiant">Identifiant :</label>
-      <input type="email" name="champIdentifiant" id="champIdentifiant" placeholder="Entrez votre adresse mail"  minlength="1" maxlength="50"  required>
+      <input type="text" name="champIdentifiant" id="champIdentifiant" placeholder="Entrez votre login"  minlength="1" maxlength="50"  required>
       <span></span>
 
       <label for="champMotDePasse">Mot de passe :</label>
-      <input type="password" name="champMotDePasse" id="champMotDePasse" placeholder="Mot de passe (8 charactères minimum)" minlength="8" maxlength="50" required>
+      <input type="password" name="champMotDePasse" id="champMotDePasse" placeholder="Mot de passe" minlength="1" maxlength="50" required>
       <span><img src="images/oeilFermé.png" id="oeilMdp" alt="oeil" onclick="afficherMDP('champMotDePasse','oeilMdp')"></span>
       
-      <a href="demandeInscription.php" class="texteAccueil"> Pas encore de compte ?</a>
-      <a href="#" class="texteAccueil"> Mot de passe oublié ?</a>
     </div>
 
     <button type="submit" name="boutonConnexion" class="boutons" id="boutonConnexion"><img src="images/unlock.png" class="imageIcone" alt="icone cadenas"><span>Connexion</span></button>
