@@ -8,8 +8,10 @@ $qJoueurIdentique = 'SELECT Nom, Prenom,Numero_Licence, Date_Naissance FROM joue
 $qAjouterJoueur = 'INSERT INTO joueur (Nom,Prenom,Numero_Licence,Photo,Date_Naissance,Taille,Poids,Poste_Prefere,Statut,Commentaires) 
                     VALUES (:nom , :prenom, :numeroLicence,:photo,:dateNaissance, :taille, :poids,:postePrefere, :statut, :commentaires)';
 
+//requete pour afficher tous les joueurs
 $qAfficherJoueurs = 'SELECT Id_Joueur, Photo, Nom, Prenom, Numero_Licence, Date_Naissance, Taille, Poids, Poste_Prefere, Statut FROM joueur';
 
+//requete pour afficher les infos d'un joueur
 $qAfficherUnJoueur = 'SELECT Id_Joueur, Photo, Nom, Prenom, Numero_Licence, Date_Naissance, Taille, Poids, Poste_Prefere, Statut, Commentaires FROM joueur WHERE Id_Joueur = :idJoueur';
 
 // requete pour supprimer un membre de la BD
@@ -21,8 +23,10 @@ $qRecupererImageJoueur = 'SELECT Photo FROM joueur WHERE Id_Joueur = :idJoueur';
 //requete de modification d'un joueur
 $qModifierInformationsJoueur = 'UPDATE joueur SET Photo = :photo, Nom = :nom, Prenom = :prenom, Numero_Licence = :numeroLicence, Date_Naissance = :dateNaissance, Taille = :taille, Poids = :poids, Poste_Prefere = :postePrefere, Statut = :statut, Commentaires = :commentaires WHERE Id_Joueur = :idJoueur';
 
+//requete pour suprimmer l'image d'un joueur
 $qSupprimerImageJoueur = 'SELECT Photo from joueur WHERE Id_Joueur = :idJoueur';
 
+//fonction pour se connecter a la bd (utilisée tout le temps)
 function connexionBd()
 {
     $SERVER = '127.0.0.1';
@@ -39,7 +43,7 @@ function connexionBd()
     return $linkpdo;
 }
 
-    
+//fonction pour faire le menu de toute l'application et toutes les pages
 function faireMenu()
 {
     testConnexion();
@@ -77,6 +81,10 @@ function faireMenu()
                     <li><a href="finDeMatch.php">Fin de match</a></li>
                 </ul>
             </li>
+
+            <li>
+                <a href="deconnexion.php">Deconnexion</a>
+            </li>
             
           </ul>
         </div>
@@ -92,19 +100,23 @@ function faireMenu()
     </script>';
 }
 
+//fonction utilisée pour nettoyer un champ entrant de tout caracteres pouvant entrainer une attaque
 function clean($champEntrant)
 {
     $champEntrant = strip_tags($champEntrant); // permet d'enlever les balises html, xml, php
-    $champEntrant = htmlspecialchars($champEntrant); // permet de transformer les balises html en *String
+    $champEntrant = htmlspecialchars($champEntrant); // permet de transformer les balises html en ""String""
     return $champEntrant;
 }
 
+//fonction utilisée une fois lors de la création du mdp dans la table de l'admin (normalement utilisée a chaque création de compte,
+//mais dans cette application, nous n'avons qu'un utilisateur).
 function psswdHash($mdp)
 {
     $code = $mdp . "C3cI eSt lE h4sH dU M0t dE p4S5e !";
     return password_hash($code, PASSWORD_DEFAULT);
 }
 
+//fonction qui vérifie si l'utilisateur est bel et bien connecté sur le compte administrateur. dans le cas contraire, il est redirigé vers l'index
 function testConnexion()
 {
     session_start();
@@ -119,18 +131,19 @@ function testConnexion()
 
 //!AJOUTER UN JOUEUR
 
+//fonction qui vérifie que chaque champ est rempli
 function champRempli($field)
 {
-    // parcoure la liste des champs 
     foreach ($field as $name) {
         // vérifie s'ils sont vides 
         if (empty($_POST[$name])) {
-            return false; // au moins un champs vides
+            return false; // au moins un champ vide
         }
     }
     return true; // champs remplis
 }
 
+//fonction pour vérifier l'existence d'un joueur
 function joueurIdentique($nom, $prenom, $numeroLicence, $dateNaissance)
 {
     // connexion a la BD
@@ -153,6 +166,7 @@ function joueurIdentique($nom, $prenom, $numeroLicence, $dateNaissance)
     return $req->rowCount(); // si ligne > 0 alors joueur deja dans la BD
 }
 
+//fonction pour ajouter un joueur dans la bd
 function ajouterJoueur($nom, $prenom, $numeroLicence, $photo, $dateNaissance, $taille, $poids, $poste,$statut,$commentaires)
 {
 
@@ -181,6 +195,7 @@ function ajouterJoueur($nom, $prenom, $numeroLicence, $photo, $dateNaissance, $t
     }
 }
 
+//fonction d'ajout d'image dans la bd
 function uploadImage($photo)
 {
     if (isset($photo)) {
@@ -214,6 +229,7 @@ function uploadImage($photo)
     return $result;
 }
 
+//fonction pour afficher tous les joueurs 
 function AfficherJoueurs() {
     // connexion a la BD
     $linkpdo = connexionBd();
@@ -271,6 +287,7 @@ function AfficherJoueurs() {
     }
 }
 
+//fonction pour afficher l'image d'un joueur
 function AfficherImageJoueur($idJoueur) {
     // connexion a la BD
     $linkpdo = connexionBd();
@@ -299,6 +316,7 @@ function AfficherImageJoueur($idJoueur) {
     }
 }
 
+//fonction pour afficher seulement un joueur
 function afficherUnJoueur($idJoueur) {
     
     // connexion a la BD
@@ -457,6 +475,7 @@ function supprimerJoueur($idJoueur)
     }
 }
 
+//fonction qui permet de supprimmer l'image d'un joueur (appelée dans supprimerJoueur)
 function supprimerImageJoueur($idJoueur)
 {
     // connexion a la BD

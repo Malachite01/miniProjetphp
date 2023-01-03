@@ -40,6 +40,16 @@
             <?php
             break;
 
+            case 'deconnexion':
+              ?>
+                <div class="editPopup">
+                  <h2 class="txtPopup">Vous avez bien ete deconnecte</h2>
+                  <img src="images/logout.png" alt="image deconnexion" class="imageIcone centerIcon">
+                  <button class="boutonFermerPopup" onclick="erasePopup('editPopup')">Fermer X</button>
+                </div>
+              <?php
+            break;
+
         }
     }
   ?> 
