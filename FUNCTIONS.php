@@ -1,6 +1,6 @@
 <?php
 
-// requete pour verifier qu'un joeur avec les données en parametre n'existe pas deja dans la BD
+// requete pour verifier qu'un joueur avec les données en parametre n'existe pas deja dans la BD
 $qJoueurIdentique = 'SELECT Nom, Prenom,Numero_Licence, Date_Naissance FROM joueur 
                     WHERE Nom = :nom AND Prenom = :prenom AND Numero_Licence = :numeroLicence AND Date_Naissance = :dateNaissance';
 
@@ -25,6 +25,28 @@ $qModifierInformationsJoueur = 'UPDATE joueur SET Photo = :photo, Nom = :nom, Pr
 
 //requete pour suprimmer l'image d'un joueur
 $qSupprimerImageJoueur = 'SELECT Photo from joueur WHERE Id_Joueur = :idJoueur';
+
+//*Matchs
+// requete pour verifier qu'un joueur avec les données en parametre n'existe pas deja dans la BD
+$qmatchIdentique = 'SELECT Date_Heure_Match, Nom_Adversaire	, Lieu_Rencontre FROM unmatch 
+                    WHERE Date_Heure_Match = :dateHeureMatch AND Nom_Adversaire = :nomAdversaire AND Lieu_Rencontre = :lieuRencontre';
+
+// requete pour ajouter un match a la BD
+$qAjouterMatch = 'INSERT INTO unmatch (Date_Heure_Match,Nom_Adversaire,Lieu_Rencontre,Resultat) 
+VALUES (:dateHeureMatch , :nomAdversaire, :lieuRencontre,:resultat)';
+
+//requete pour afficher tous les matchs
+$qAfficherMatchs = 'SELECT Id_UnMatch,Nom_Adversaire,Date_Heure_Match,Lieu_Rencontre,Resultat FROM unmatch';
+
+//requete pour afficher les infos d'un match
+$qAfficherUnMatch = 'SELECT Id_UnMatch,Nom_Adversaire,Date_Heure_Match,Lieu_Rencontre,Resultat FROM unmatch WHERE Id_UnMatch = :idMatch';
+
+//requete de modification d'un match
+$qModifierInformationsMatch = 'UPDATE unmatch SET Nom_Adversaire = :nomAdversaire, Date_Heure_Match = :dateHeureMatch, Lieu_Rencontre = :lieuRencontre, Resultat = :resultat WHERE Id_UnMatch = :idMatch';
+
+// requete pour supprimer un membre de la BD
+$qSupprimerMatch = 'DELETE FROM unmatch WHERE Id_UnMatch = :idMatch';
+
 
 //fonction pour se connecter a la bd (utilisée tout le temps)
 function connexionBd()
@@ -68,7 +90,7 @@ function faireMenu()
             <li><a id="Joueurs">Joueurs</a>
                 <ul class="sousMenu">
                     <li><a href="ajoutJoueur.php" >Ajouter un joueur</a></li>
-                    <li><a href="gestionJoueurs.php" >Gerer les joueurs</a></li>
+                    <li><a href="gestionJoueurs.php" >Gerer l\'equipe</a></li>
                 </ul>
             </li>        
             
@@ -80,6 +102,11 @@ function faireMenu()
                     <li><a href="gestionMatch.php">Gerer les matchs</a></li>
                     <li><a href="finDeMatch.php">Fin de match</a></li>
                 </ul>
+            </li>
+
+            <div class="separateur"></div>
+            
+            <li><a id="Statistiques" href="#">Statistiques</a>
             </li>
 
             <li>
@@ -278,7 +305,7 @@ function AfficherJoueurs() {
             </td>
             <td>
                 <button type="submit" name="boutonSupprimer" value="' . $idJoueur . '
-                " class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce membre ?\');" >
+                " class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce joueur ?\');" >
                     <img src="images/bin.png" class="imageIcone" alt="icone supprimer">
                     <span>Supprimer</span>
                 </button>
@@ -436,7 +463,7 @@ function modifierJoueur($photo, $nom, $prenom, $numeroLicence, $dateNaissance, $
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qModifierInformationsJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un objectif ');
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un joueur ');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -453,7 +480,7 @@ function modifierJoueur($photo, $nom, $prenom, $numeroLicence, $dateNaissance, $
         ':idJoueur' => clean($idJoueur)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un objectif ');
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un joueur ');
     }
 }
 
@@ -501,4 +528,186 @@ function supprimerImageJoueur($idJoueur)
         }
     }
 }
+
+//!MATCHS
+
+//fonction pour vérifier l'existence d'un match
+function matchIdentique($date, $nom, $lieu)
+{
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qmatchIdentique']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour verifier si un match existe deja');
+    }
+    // execution de la requete sql
+    $req->execute(array(
+        ':dateHeureMatch' => clean($date),
+        ':nomAdversaire' => clean($nom),
+        ':lieuRencontre' => clean($lieu)
+    ));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour verifier si un match existe deja');
+    }
+    return $req->rowCount(); // si ligne > 0 alors joueur deja dans la BD
+}
+
+//fonction pour ajouter un match dans la bd
+function ajouterMatch($date, $nom, $lieu, $resultat)
+{
+
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAjouterMatch']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un match a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(
+        ':dateHeureMatch' => clean($date),
+        ':nomAdversaire' => clean($nom),
+        ':lieuRencontre' => clean($lieu),
+        ':resultat' => $resultat
+    ));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour ajouter un match a la BD');
+    }
+}
+
+//fonction pour afficher tous les matchs 
+function AfficherMatchs() {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAfficherMatchs']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des matchs');
+    }
+    // execution de la requete sql
+    $req->execute();
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des matchs');
+    }
+    // permet de parcourir toutes les lignes de la requete
+    while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
+        echo '<tr>';
+        // permet de parcourir toutes les colonnes de la requete
+        foreach ($data as $key => $value) {
+            // recuperation valeurs importantes dans des variables
+            if ($key == 'Id_UnMatch') {
+                $idMatch = $value;
+            } elseif ($key == 'Date_Heure_Match') {
+                echo '<td>' . date('d/m/Y à H:i', strtotime($value)) . '</td>';
+            } else {
+                echo '<td>' . $value . ' </td>';
+            }
+            
+        }
+        echo '
+            <td>
+                <button type="submit" name="boutonModifier" value="' . $idMatch . '" class="boutonModifier" formaction="modifierMatch.php">
+                    <img src="images/edit.png" class="imageIcone" alt="icone modifier">
+                    <span>Modifier</span>
+                </button>
+            </td>
+            <td>
+                <button type="submit" name="boutonSupprimer" value="' . $idMatch . '" class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce match ?\');" >
+                    <img src="images/bin.png" class="imageIcone" alt="icone supprimer">
+                    <span>Supprimer</span>
+                </button>
+            </td>
+        </tr>';
+    }
+}
+
+//fonction pour afficher seulement un match
+function afficherUnMatch($idMatch) {  
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAfficherUnMatch']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher un match a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idMatch' => clean($idMatch)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour afficher un match a la BD');
+    }
+    // permet de parcourir la ligne de la requetes 
+    while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
+        // permet de parcourir toutes les colonnes de la requete 
+        foreach ($data as $key => $value) {
+            // recuperation de toutes les informations du membre de la session dans des inputs 
+            if ($key == 'Nom_Adversaire') {
+                echo '
+                <label for="champEquipe">Equipe affrontee :</label>
+                <input type="text" name="champEquipe" placeholder="Entrez le nom de l\'equipe affrontee" minlength="1" maxlength="50" value="'.$value.'" required>
+                <span></span>
+                ';
+                echo '<input type="hidden" value="" name="hiddenImageLink">';
+            } elseif ($key == 'Date_Heure_Match') {
+                echo'
+                <label for="champDate">Date de debut:</label>
+                <input type="datetime-local" name="champDate" placeholder="Entrez la date de debut du match" min="1900-01-01T00:00" max="'. date('Y-m-d')."T00:00" . '" value="'.$value.'" required>
+                <span></span>
+                ';
+            } elseif ($key == 'Lieu_Rencontre'){
+                echo '
+                <label for="champLieu">Lieu de la rencontre :</label>
+                <input type="text" name="champLieu" placeholder="Entrez le lieu de la rencontre" minlength="1" maxlength="50" value="'.$value.'" required>
+                <span></span>
+                ';
+            } elseif ($key == 'Resultat'){
+                echo '
+                <label for="champResultat">Resultats (optionnel) :</label>
+                <input type="text" name="champResultat" placeholder="Entrez les resultats: 00-00" min="5" max="5" onkeypress="this.value = scoreMatch(this.value);" oninput="this.value = this.value.replace(/[^0-9.-]/g, \'\').replace(/(\..*)\./g, \'$1\');" value="'.$value.'">
+                <span></span>
+                ';
+            } 
+        }
+    }
+}
+
+// fonction qui permet de modifier un match de la BD
+function modifierMatch($nomAdversaire, $dateHeureMatch, $lieuRencontre, $resultat, $idMatch) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qModifierInformationsMatch']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un match');
+    }
+    // execution de la requete sql
+    $req->execute(array(
+        ':nomAdversaire' => clean($nomAdversaire),
+        ':dateHeureMatch' => clean($dateHeureMatch),
+        ':lieuRencontre' => clean($lieuRencontre),
+        ':resultat' => clean($resultat),
+        ':idMatch' => clean($idMatch)
+    ));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un match');
+    }
+}
+
+// fonction qui permet de supprimer un match a partir de son id
+function supprimerMatch($idMatch)
+{
+    // connexion a la base de donnees
+    $linkpdo = connexionBd();
+    //on supprime le membre
+    $req = $linkpdo->prepare($GLOBALS['qSupprimerMatch']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour supprimer un match de la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idMatch' => clean($idMatch)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour supprimer un match de la BD');
+    }
+}
+
 ?>

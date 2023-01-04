@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="description" content="">
-  <title>Gestion des joueurs</title>
+  <title>Gestion des matchs</title>
   <link rel="icon" type="image/x-icon" href="images/favicon.png">
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
   <link rel="stylesheet" href="style/style.css">
@@ -24,8 +24,8 @@
   <?php 
   faireMenu();
   if (isset($_POST['boutonSupprimer'])) {
-    supprimerJoueur($_POST['boutonSupprimer']);
-    header("Location: gestionJoueurs.php?params=suppr");
+    supprimerMatch($_POST['boutonSupprimer']);
+    header("Location: gestionMatch.php?params=suppr");
   };
   if (isset($_GET['params'])) {
     $err = clean($_GET['params']);
@@ -48,72 +48,34 @@
 
   //MODIFIER LE JOUEUR DANS LA PAGE DE MODIFICATION JOUEUR
   if (isset($_POST['boutonValider'])) {
-    if ($_FILES['champPhoto']['name'] == "") {
-      modifierJoueur(
-        $_POST['hiddenImageLink'],
-        $_POST['champNom'],
-        $_POST['champPrenom'],
-        $_POST['champNumeroLicence'],
-        $_POST['champDateDeNaissance'],
-        $_POST['champTaille'],
-        $_POST['champPoids'],
-        $_POST['champPoste'],
-        $_POST['champStatut'],
-        $_POST['champCommentaires'],
-        $_POST['boutonValider']
-      );
-    } else {
-      $image = uploadImage($_FILES['champPhoto']);
-      if ($image != null) {
-        modifierJoueur(
-          $image,
-          $_POST['champNom'],
-          $_POST['champPrenom'],
-          $_POST['champNumeroLicence'],
-          $_POST['champDateDeNaissance'],
-          $_POST['champTaille'],
-          $_POST['champPoids'],
-          $_POST['champPoste'],
-          $_POST['champStatut'],
-          $_POST['champCommentaires'],
-          $_POST['boutonValider']
-        );
-        unlink($_POST['hiddenImageLink']);
-      } else {
-      echo '
-      <div class="erreurPopup">
-        <h2 class="txtPopup">Erreur, image trop grande.</h2>
-        <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
-        <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
-      </div>';
-      }
-    }
+    modifierMatch(
+      $_POST['champEquipe'],
+      $_POST['champDate'],
+      $_POST['champLieu'],
+      $_POST['champResultat'],
+      $_POST['boutonValider']
+    );
   }
 
   ?>
 
-  <h1>Gestion des joueurs</h1>
+  <h1>Gestion des matchs</h1>
 
-  <form id="formGestionJoueur" method="POST">
+  <form id="formGestionMatchs" method="POST">
 
     <table>
       <thead>
-        <th>Photo</th>
-        <th>Nom</th>
-        <th>Prenom</th>
-        <th>Numero de licence</th>
-        <th>Date de naissance</th>
-        <th>Taille</th>
-        <th>Poids</th>
-        <th>Poste prefere</th>
-        <th>Statut</th>
+        <th>Nom des adversaires</th>
+        <th>Date du match</th>
+        <th>Lieu de rencontre</th>
+        <th>Resultats</th>
         <th>Modifier</th>
         <th>Supprimer</th>
       </thead>
 
-      <tbody id="tbodyGererJoueurs">
+      <tbody id="tbodyGererMatchs">
         <?php
-          AfficherJoueurs();
+          AfficherMatchs();
         ?>  
       </tbody>
     </table>

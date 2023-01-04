@@ -40,3 +40,16 @@ function limitKeypress(event, value, maxLength) {
         event.preventDefault();
     }
 }
+
+function scoreMatch (value) {
+    if (value.toString().length >= 2 && value.toString().length < 3) {
+        value = value +"-";
+    }
+    if(value.split('-').length === 3) {
+        value = value.slice(0, -1);
+    }
+    if (value.toString().length >= 5) {
+        value = value.substring(0, 5);
+    }
+    return value;
+}

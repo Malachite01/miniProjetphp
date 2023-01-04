@@ -18,7 +18,7 @@ if (!empty($_POST['champIdentifiant']) && !empty($_POST['champMotDePasse'])) // 
         if (password_verify($mdp, $data['lePassword'])) {
             //page d'accueil  tableau de bord
             $_SESSION['estConnecte'] = "connecte";
-            header('Location: ajoutJoueur.php');
+            header('Location: gestionJoueurs.php');
             die();
             //Si mauvais password on redirige vers une autre page on l'on a codé une erreur du nom de 'password'
         } else {

@@ -1229,6 +1229,26 @@ div.miseFormeConnexion label {
     #tbodyGererJoueurs td:nth-child(9)::before{
         content: "Statut :";
     }
+    #tbodyGererMatchs td::before{
+        position: absolute;
+        font-weight: bold;
+        font-size: 1.05em;
+        left: 0;
+        width: 50%;
+        text-align: left;
+    }
+    #tbodyGererMatchs td:first-child::before{
+        content: "Adversaires :";
+    }
+    #tbodyGererMatchs td:nth-child(2)::before{
+        content: "Date :";
+    }
+    #tbodyGererMatchs td:nth-child(3)::before{
+        content: "Lieu :";
+    }
+    #tbodyGererMatchs td:nth-child(4)::before{
+        content: "Resultats :";
+    }
 }
 @media screen and (max-width: 700px) {
     .boutonSupprimer .imageIcone {
