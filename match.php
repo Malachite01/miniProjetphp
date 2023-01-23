@@ -91,10 +91,18 @@ if (isset($_POST['boutonValider'])) {
   //!VALIDER LE SCORE (aussi possible dans la modification)
   if (isset($_POST['boutonResultats'])) {
     $inputName = $_POST['boutonResultats'];
-    entrerResultats(
-      $_POST[$inputName],
-      $_POST['boutonResultats']
-    );
+    if($_POST[$inputName] == 0 || $_POST[$inputName] == null) {
+      entrerResultats(
+        "00-00",
+        $_POST['boutonResultats']
+      );
+    } else {
+      entrerResultats(
+        $_POST[$inputName],
+        $_POST['boutonResultats']
+      );
+    }
+    
   }
 
   ?>

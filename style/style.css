@@ -1410,6 +1410,9 @@ button > span {
     #tbodyGererDispos td:nth-child(7)::before{
         content: "Poste prefere :";
     }
+    #tbodyGererDispos td:nth-child(7)::before{
+        content: "Notation moyenne :";
+    }
     #tbodyGererSelection td::before{
         position: absolute;
         font-weight: bold;

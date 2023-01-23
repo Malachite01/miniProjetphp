@@ -66,7 +66,7 @@
 ?>
 
 <!-- FORMULAIRE AJOUT A LA SELECTION -->
-<div class="aCacher fenButtonOff transparent">
+<div style="position: fixed;" class="aCacher fenButtonOff transparent">
     <form id="formAjoutFeuille" method="POST" onsubmit="erasePopup('erreurPopup'),erasePopup('validationPopup')">
         <div class="miseEnForme" id="miseEnFormeFormulaire">
             <label for="champRole">Statut :</label>
@@ -124,7 +124,7 @@
 
 <!-- JOUEURS DISPOS A L'AJOUT (pas blesse pas suspendu pas absent,pas dans un autre match au meme moment)-->
 <form id="formGestionDispos" method="POST">
-    <h3>Joueurs disponibles <?php if(AfficherJoueursIndispos() == 1){echo '('.AfficherJoueursIndispos().' joueur indisponible)';} else if(AfficherJoueursIndispos() > 1) {echo '('.AfficherJoueursIndispos().' joueurs indisponibles)';};?>: </h3>
+    <h3>Joueurs disponibles <?php if(compterJoueursIndispos() == 1){echo '(dont '.compterJoueursIndispos().' joueur indisponible)';} else if(compterJoueursIndispos() > 1) {echo '(dont '.compterJoueursIndispos().' joueurs indisponibles)';};?>: </h3>
     <table>
         <thead>
         <th>Photo</th>
@@ -134,6 +134,7 @@
         <th>Poids</th>
         <th>Commentaires</th>
         <th>Poste prefere</th>
+        <th>Notation moyenne</th>
         <th>Ajouter a la selection</th>
         </thead>
 

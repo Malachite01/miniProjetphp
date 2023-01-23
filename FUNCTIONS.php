@@ -85,6 +85,15 @@ $qSelectionsRemplacant = 'SELECT participe.* FROM participe WHERE participe.Role
 //moyenne du joueur
 $qMoyenneUnJoueur = 'SELECT AVG(participe.Notation) as Moyenne FROM participe WHERE participe.Id_Joueur = :idJoueur';
 
+$qVictoires = 'SELECT COUNT(*) FROM unmatch WHERE SUBSTR(Resultat,1,2) > SUBSTR(Resultat,4,2) AND Resultat IS NOT NULL';
+
+$qDefaites = 'SELECT COUNT(*) FROM unmatch WHERE SUBSTR(Resultat,1,2) < SUBSTR(Resultat,4,2) AND Resultat IS NOT NULL';
+
+$qEgalites = 'SELECT COUNT(*) FROM unmatch WHERE COALESCE(resultat,"00-00") = SUBSTR(COALESCE(resultat,"00-00"),1,2)';
+
+//requete pour compter le nombre de joueurs
+$qNbJoueurs = 'SELECT COUNT(*) FROM joueur';
+
 //fonction pour se connecter a la bd (utilisée tout le temps)
 function connexionBd()
 {
@@ -645,7 +654,7 @@ function AfficherMatchs() {
             } elseif ($key == 'Date_Heure_Match') {
                 echo '<td>' . date('d/m/Y à H:i', strtotime($value)) . '</td>';
             } elseif ($key == 'Resultat') {
-                if($value == null || $value == 0) {
+                if($value == null) {
                     echo "<td><input style=\"width: fit-content; margin: 0;\" type=\"text\" name=\"".$idMatch."\" placeholder=\"Equipe-Adversaires: 00-00\" min=\"5\" max=\"5\" onkeyup=\"this.value = scoreMatch(this.value);\" oninput=\"this.value = this.value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1');\"><button type=\"submit\" name=\"boutonResultats\" value=\"".$idMatch."\" style=\"width: fit-content; margin: 0; padding: 2px;\" class=\"boutons\"><img class=\"imageIcone\" src=\"images/valider.png\"></button></td>";
                 } else {
                     echo '<td>'.$value.'</td>';
@@ -937,6 +946,7 @@ function AfficherJoueursDispos($idMatch) {
             }
         }
         echo '
+            <td>'.MoyenneUnJoueur($idJoueur).'</td>
             <td>
                 <button type="button" name="boutonAjouterJoueurFeuille" class="boutons boutonAjouterA" onclick="fenOpen(\'aCacher\'),deCache(\'aCacher\'),ajouterSelection(this)" value="'.$idJoueur.'">
                     <span>Ajouter</span>
@@ -990,7 +1000,25 @@ function retirerJoueurASelection($idJoueur, $idMatch)
 }
 
 //fonction pour afficher tous les joueurs disponible a la selection
-function AfficherJoueursIndispos() {
+function nbJoueurs() {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qNbJoueurs']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // execution de la requete sql
+    $req->execute();
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    $res = $req->fetch();
+    return $res[0];
+}
+
+//fonction pour afficher tous les joueurs disponible a la selection
+function compterJoueursIndispos() {
     // connexion a la BD
     $linkpdo = connexionBd();
     // preparation de la requete sql
@@ -1111,4 +1139,57 @@ function MoyenneUnJoueur($idJoueur) {
     $moyenne = $req->fetch();
     return round($moyenne[0],1,PHP_ROUND_HALF_EVEN);
 }
+
+//!STATISTIQUES EQUIPE
+function VictoiresEquipe() {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qVictoires']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute();
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    $res = $req->fetch();
+    return $res[0];
+}
+
+function DefaitesEquipe() {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qDefaites']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute();
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    $res = $req->fetch();
+    return $res[0];
+}
+
+function EgalitesEquipe() {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qEgalites']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute();
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    $res = $req->fetch();
+    return $res[0];
+}
+
 ?>

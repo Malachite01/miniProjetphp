@@ -11,6 +11,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
   <link rel="stylesheet" href="style/style.css">
 </head>
+<script src="js/chart.js"></script>
 
 <?php
     require('FUNCTIONS.php');
@@ -26,27 +27,44 @@
   <h1>Statistiques de l'equipe</h1>
 
   <form id="form" method="POST" onsubmit="erasePopup('erreurPopup'),erasePopup('validationPopup')">
-  <div class="miseEnForme" id="miseEnFormeFormulaire">
-    
-    <label for="champGagnes">Nombre de matchs gagnes :</label> 
+  <div class="miseEnForme stats" id="miseEnFormeFormulaire">
+
+    <label for="champBlesses">Pourcentage de joueurs indisponibles :</label>
     <div class="progress-bar">
-      <div class="progress" style="width: 50%; background-color: #5cd65c;"></div><p class="percentage">50%</p>
+      <div class="progress" style="width: <?php echo round(compterJoueursIndispos()/nbJoueurs()*100);?>%; background-color: #ff6666;"></div><p class="percentage"><?php echo round(compterJoueursIndispos()/nbJoueurs()*100) ?>%</p>
     </div>
-    <input type="text" name="champGagnes" onfocus="blur();"  onfocus="blur();" readonly>
+    <input type="text" name="champPerdus" value="<?php echo compterJoueursIndispos()?> Indispos" onfocus="blur();" readonly>
+    <?php 
+    $v = json_encode(VictoiresEquipe()); 
+    $d = json_encode(DefaitesEquipe()); 
+    $e = json_encode(EgalitesEquipe());
+    echo '<canvas id="pie-chartStats"></canvas>';
+    ?>
+    <script>
+        var value1 = <?php echo $v ?>;
+        var value2 = <?php echo $d ?>;
+        var value3 = <?php echo $e ?>;
 
-
-    
-    <label for="champPerdus">Nombre de matchs perdus :</label> 
-    <div class="progress-bar">
-      <div class="progress" style="width: 100%; background-color: #ff6666;"></div><p class="percentage">100%</p>
-    </div>
-    <input type="text" name="champPerdus" value="Perdus 8" onfocus="blur();" readonly>
-
-
-    <label for="champBlesses">Nombre de joueurs blesses :</label>
-    <input type="text" name="champBlesses"  onfocus="blur();" readonly>
-    <span></span>
-
+        // Définir les données pour les sections du graphique
+        var data = {
+            labels: ['Nombre de victoires', 'Nombre de défaites', 'Nombre d\'égalités'],
+            datasets: [{
+                data: [value1, value2, value3], // les valeurs en pourcentage
+                backgroundColor: ['#8bc196', '#ff7474', '#ffa64d'],
+                hoverBackgroundColor: ['#6aaf78', '#ff3333', '#e67300']
+            }]
+        };
+        // Récupérer le conteneur pour le graphique
+        var ctx = document.getElementById('pie-chartStats').getContext('2d');
+        // Créer le graphique en forme de camembert
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: false
+            }
+        });
+      </script>
   </div>
   </form>
 </body>
