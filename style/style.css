@@ -283,7 +283,7 @@ nav a {
     position: absolute;
     padding-right: 10%;
     padding-top: 15px;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -1466,7 +1466,7 @@ button > span {
         content: "Lieu :";
     }
     #tbodyGererMatchs td:nth-child(4)::before{
-        content: "Score final (Nombre de sets) :";
+        content: "Score final (Nombre de sets gagnants) :";
     }
 }
 @media screen and (max-width: 700px) {

@@ -25,53 +25,47 @@
   faireMenu();
 
   //!AJOUT D'UN JOUEUR
-  if (isset($_POST['boutonValider'])) {
-    if (champRempli(array('champNom', 'champPrenom', 'champNumeroLicence', 'champDateDeNaissance', 'champTaille','champPoids'))) {
-        if (joueurIdentique(
-        $_POST['champNom'],
-        $_POST['champPrenom'],
-        $_POST['champNumeroLicence'],
-        $_POST['champDateDeNaissance']
-        ) == 0) {
-        $image = uploadImage($_FILES['champPhoto']);
-        if($image != null) {
-            ajouterJoueur(
-            $_POST['champNom'],
-            $_POST['champPrenom'],
-            $_POST['champNumeroLicence'],
-            $image,
-            $_POST['champDateDeNaissance'],
-            $_POST['champTaille'],
-            $_POST['champPoids'],
-            $_POST['champPoste'],
-            $_POST['champStatut'],
-            $_POST['champCommentaires']
-            );
-            
-            echo '
-            <div class="validationPopup">
-            <h2 class="txtPopup">Le joueur a bien ete ajoute a la base !</h2>
-            <img src="images/valider.png" alt="valider" class="imageIcone centerIcon">
-            <button class="boutonFermerPopup" onclick="erasePopup(\'validationPopup\')">Fermer X</button>
-            </div>';
+  if (champRempli(array('champNom', 'champPrenom', 'champNumeroLicence', 'champDateDeNaissance', 'champTaille','champPoids'))) {
+    if (isset($_POST['boutonValider'])) {
+        if (joueurIdentique($_POST['champNumeroLicence']) == 0) {
+          $image = uploadImage($_FILES['champPhoto']);
+          if($image != null) {
+              ajouterJoueur(
+                $_POST['champNom'],
+                $_POST['champPrenom'],
+                $_POST['champNumeroLicence'],
+                $image,
+                $_POST['champDateDeNaissance'],
+                $_POST['champTaille'],
+                $_POST['champPoids'],
+                $_POST['champPoste'],
+                $_POST['champStatut'],
+                $_POST['champCommentaires']
+              );
+              echo '
+              <div class="validationPopup">
+                <h2 class="txtPopup">Le joueur a bien ete ajoute a la base !</h2>
+                <img src="images/valider.png" alt="valider" class="imageIcone centerIcon">
+                <button class="boutonFermerPopup" onclick="erasePopup(\'validationPopup\')">Fermer X</button>
+              </div>';
+          } else {
+              echo '
+              <div class="erreurPopup">
+                <h2 class="txtPopup">Erreur, image trop grande.</h2>
+                <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
+                <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
+              </div>';
+          }
         } else {
-            echo '
-            <div class="erreurPopup">
-            <h2 class="txtPopup">Erreur, image trop grande.</h2>
-            <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
-            <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
-            </div>';
-        }
-        } else {
-        echo'
-        <div class="erreurPopup">
-            <h2 class="txtPopup">Le joueur n\'a pas ete ajoute a la base car il existe deja.</h2>
-            <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
-            <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
-        </div>';
+          echo'
+          <div class="erreurPopup">
+              <h2 class="txtPopup">Le joueur n\'a pas ete ajoute a la base car il existe deja.</h2>
+              <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
+              <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
+          </div>';
         }
     }
-    }
+  }
   //!SUPRESSION D'UN JOUEUR
   if (isset($_POST['boutonSupprimer'])) {
     supprimerJoueur($_POST['boutonSupprimer']);
@@ -158,7 +152,7 @@
             <span></span>
 
             <label for="champNumeroLicence">Numero de licence :</label>
-            <input type="number" name="champNumeroLicence" placeholder="Entrez la licence du joueur" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" min="1" max="9999999999999" onkeypress="limitKeypress(event,this.value,11)" required>
+            <input type="number" name="champNumeroLicence" placeholder="Entrez la licence du joueur" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" min="1" max="99999999999" onkeypress="limitKeypress(event,this.value,11)" required>
             <span></span>
 
             <label for="champDateDeNaissance">Date de naissance :</label>

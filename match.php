@@ -60,7 +60,7 @@ if (isset($_POST['boutonValider'])) {
     supprimerMatch($_POST['boutonSupprimer']);
     echo '
     <div class="supprPopup">
-        <h2 class="txtPopup">Le joueur a ete supprime.</h2>
+        <h2 class="txtPopup">Le match a ete supprime.</h2>
         <img src="images/bin.png" alt="image suppression" class="imageIcone centerIcon">
         <button class="boutonFermerPopup" onclick="erasePopup(\'supprPopup\')">Fermer X</button>
     </div>';
@@ -70,7 +70,7 @@ if (isset($_POST['boutonValider'])) {
     if ($err == 'modif') {
       echo '
       <div class="editPopup">
-        <h2 class="txtPopup">Le joueur a bien ete modifie !</h2>
+        <h2 class="txtPopup">Le match a bien ete modifie !</h2>
         <img src="images/edit.png" alt="valider" class="imageIcone centerIcon">
         <button class="boutonFermerPopup" onclick="erasePopup(\'editPopup\')">Fermer X</button>
       </div>';
@@ -146,7 +146,7 @@ if (isset($_POST['boutonValider'])) {
         <th>Nom des adversaires</th>
         <th>Date du match</th>
         <th>Lieu de rencontre</th>
-        <th>Score final (Nombre de sets)</th>
+        <th>Score final (Nombre de sets gagnants)</th>
         <th>Feuille de match</th>
         <th>Modifier</th>
         <th>Supprimer</th>

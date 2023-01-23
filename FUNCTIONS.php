@@ -1,8 +1,7 @@
 <?php
 
 // requete pour verifier qu'un joueur avec les données en parametre n'existe pas deja dans la BD
-$qJoueurIdentique = 'SELECT Nom, Prenom,Numero_Licence, Date_Naissance FROM joueur 
-                    WHERE Nom = :nom AND Prenom = :prenom AND Numero_Licence = :numeroLicence AND Date_Naissance = :dateNaissance';
+$qJoueurIdentique = 'SELECT * FROM joueur WHERE Numero_Licence = :numeroLicence';
 
 // requete pour ajouter un joeur a la BD
 $qAjouterJoueur = 'INSERT INTO joueur (Nom,Prenom,Numero_Licence,Photo,Date_Naissance,Taille,Poids,Poste_Prefere,Statut,Commentaires) 
@@ -95,6 +94,12 @@ $qMatchPerdu = 'SELECT * FROM unmatch WHERE SUBSTR(Resultat,1,2) < SUBSTR(Result
 
 //requete pour compter le nombre de joueurs
 $qNbJoueurs = 'SELECT COUNT(*) FROM joueur';
+
+//requete qui selectionne le nombre de matchs dans lesquels un joueur a ete selectionné
+$qMatchsPourUnJoueur = 'SELECT COUNT(DISTINCT unmatch.Id_UnMatch) FROM unmatch INNER JOIN participe ON unmatch.Id_UnMatch = participe.Id_UnMatch WHERE participe.Id_Joueur = :idJoueur';
+
+//matchs victorieux pour un joueur
+$qMatchsVictoirePourUnJoueur = 'SELECT COUNT(*) FROM unmatch WHERE SUBSTR(Resultat,1,2) > SUBSTR(Resultat,4,2) AND Resultat IS NOT NULL UNION SELECT COUNT(DISTINCT unmatch.Id_UnMatch) FROM unmatch INNER JOIN participe ON unmatch.Id_UnMatch = participe.Id_UnMatch WHERE participe.Id_Joueur = :idJoueur';
 
 //fonction pour se connecter a la bd (utilisée tout le temps)
 function connexionBd()
@@ -207,7 +212,7 @@ function champRempli($field)
 }
 
 //fonction pour vérifier l'existence d'un joueur
-function joueurIdentique($nom, $prenom, $numeroLicence, $dateNaissance)
+function joueurIdentique($numeroLicence)
 {
     // connexion a la BD
     $linkpdo = connexionBd();
@@ -218,10 +223,7 @@ function joueurIdentique($nom, $prenom, $numeroLicence, $dateNaissance)
     }
     // execution de la requete sql
     $req->execute(array(
-        ':nom' => clean($nom),
-        ':prenom' => clean($prenom),
-        ':numeroLicence' =>($numeroLicence),
-        ':dateNaissance' => clean($dateNaissance)
+        ':numeroLicence' =>($numeroLicence)
     ));
     if ($req == false) {
         die('Erreur ! Il y a un probleme lors l\'execution de la requete pour verifier si un joueur existe deja');
@@ -345,21 +347,19 @@ function AfficherJoueurs() {
             <td>
                 <button type="submit" name="boutonConsulter" value="' . $idJoueur . '" 
                 class="boutonConsulter" formaction="statsJoueur.php">
-                <img src="images/oeil2.png" class="imageIcone" alt="icone consulter">
+                <img src="images/chart.png" class="imageIcone" alt="icone consulter">
                 <span>Consulter</span>
                 </button>
             </td>
             <td>
                 <button type="submit" name="boutonModifier" value="' . $idJoueur . '" class="boutonModifier" formaction="modifierJoueur.php">
                     <img src="images/edit.png" class="imageIcone" alt="icone modifier">
-                    <span>Modifier</span>
                 </button>
             </td>
             <td>
                 <button type="submit" name="boutonSupprimer" value="' . $idJoueur . '
                 " class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce joueur ?\');" formaction="joueur.php">
                     <img src="images/bin.png" class="imageIcone" alt="icone supprimer">
-                    <span>Supprimer</span>
                 </button>
             </td>
         </tr>';
@@ -950,7 +950,7 @@ function AfficherJoueursDispos($idMatch) {
             }
         }
         echo '
-            <td>'.MoyenneUnJoueur($idJoueur).'</td>
+            <td>'.MoyenneUnJoueur($idJoueur).'/5</td>
             <td>
                 <button type="button" name="boutonAjouterJoueurFeuille" class="boutons boutonAjouterA" onclick="fenOpen(\'aCacher\'),deCache(\'aCacher\'),ajouterSelection(this)" value="'.$idJoueur.'">
                     <span>Ajouter</span>
@@ -1072,7 +1072,15 @@ function afficherStatsUnJoueur($idJoueur) {
         die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
     }
     echo '<p id="noteJoueur"> Note moyenne : ' . MoyenneUnJoueur($idJoueur).'/5</p>';
-    echo '<p id="tauxVictoire"> Taux victoire quand selectionne : A faire</p>';
+    if(nombreDeMatchsUnJoueur($idJoueur)!=0) {
+        $tauxVictoire = nombreMatchsGagnesUnJoueur($idJoueur)/nombreDeMatchsUnJoueur($idJoueur)*100 . '%';
+        if($tauxVictoire > 100) {
+            $tauxVictoire = 100 . '%';
+        }
+    } else {
+        $tauxVictoire = '0 selection';
+    }
+    echo '<p id="tauxVictoire"> Taux victoire quand selectionne : '.$tauxVictoire.'</p>';
     // permet de parcourir la ligne de la requetes 
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
         // permet de parcourir toutes les colonnes de la requete 
@@ -1197,6 +1205,39 @@ function matchPerdu($idMatch) {
     } else {
         return 0;
     }
+}
+
+function nombreDeMatchsUnJoueur($idJoueur) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qMatchsPourUnJoueur']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idJoueur' => clean($idJoueur)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    $res = $req->fetch();
+    return $res[0];
+}
+function nombreMatchsGagnesUnJoueur($idJoueur) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qMatchsVictoirePourUnJoueur']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idJoueur' => clean($idJoueur)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    $res = $req->fetch();
+    return $res[0];
 }
 
 ?>
