@@ -187,7 +187,6 @@ function psswdHash($mdp)
 //fonction qui vérifie si l'utilisateur est bel et bien connecté sur le compte administrateur. dans le cas contraire, il est redirigé vers l'index
 function testConnexion()
 {
-    session_start();
     if ($_SESSION['estConnecte'] == null) {
         header('Location: index.php');
     }
