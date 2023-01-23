@@ -92,10 +92,12 @@ if (isset($_POST['boutonValider'])) {
   if (isset($_POST['boutonResultats'])) {
     $inputName = $_POST['boutonResultats'];
     if($_POST[$inputName] == 0 || $_POST[$inputName] == null) {
-      entrerResultats(
-        "00-00",
-        $_POST['boutonResultats']
-      );
+      echo '
+      <div class="alertPopup">
+          <h2 class="txtPopup">Attention, au volley il n\'y a pas de matchs nuls!</h2>
+          <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
+          <button class="boutonFermerPopup" onclick="erasePopup(\'alertPopup\')">Fermer X</button>
+      </div>';
     } else {
       entrerResultats(
         $_POST[$inputName],
@@ -139,13 +141,12 @@ if (isset($_POST['boutonValider'])) {
   <form id="formGestionMatchs" method="POST">
       
     <button type="button" name="boutonAjouterEnfant" class="boutons boutonAjouterA" onclick="fenOpen('aCacher'),deCache('aCacher')"><span>Ajouter un match</span><img style="transform: rotate(-45deg);" src="images/annuler.png" class="imageIcone" alt="icone cadenas"></button>
-    <p class="msgSelection">Aide: les boutons de consultation rouges sont les matchs avec une selection non valide.</p> 
     <table>
       <thead>
         <th>Nom des adversaires</th>
         <th>Date du match</th>
         <th>Lieu de rencontre</th>
-        <th>Score final</th>
+        <th>Score final (Nombre de sets)</th>
         <th>Feuille de match</th>
         <th>Modifier</th>
         <th>Supprimer</th>

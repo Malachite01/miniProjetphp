@@ -1466,7 +1466,7 @@ button > span {
         content: "Lieu :";
     }
     #tbodyGererMatchs td:nth-child(4)::before{
-        content: "Score :";
+        content: "Score final (Nombre de sets) :";
     }
 }
 @media screen and (max-width: 700px) {

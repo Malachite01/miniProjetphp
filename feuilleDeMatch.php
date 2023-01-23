@@ -114,7 +114,7 @@
         <tbody id="tbodyGererSelection">
             <?php
                 if(MatchValide($_SESSION['match']) < 5) {
-                    echo '<p class="msgSelection">Selection invalide car tous les postes necessaires ne sont pas occupés!</p>';
+                    echo '<p class="msgSelection" style="display: inline;"><img src="images/warning.png" class="imageIcone" alt="icone consulter">Selection invalide car tous les postes necessaires ne sont pas occupés!</p>';
                 }
                 AfficherJoueursSelection($_SESSION['match']);
             ?>

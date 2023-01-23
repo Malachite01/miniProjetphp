@@ -88,8 +88,10 @@ $qMoyenneUnJoueur = 'SELECT AVG(participe.Notation) as Moyenne FROM participe WH
 $qVictoires = 'SELECT COUNT(*) FROM unmatch WHERE SUBSTR(Resultat,1,2) > SUBSTR(Resultat,4,2) AND Resultat IS NOT NULL';
 
 $qDefaites = 'SELECT COUNT(*) FROM unmatch WHERE SUBSTR(Resultat,1,2) < SUBSTR(Resultat,4,2) AND Resultat IS NOT NULL';
+//PAS DEGALITES AU VOLLEY
 
-$qEgalites = 'SELECT COUNT(*) FROM unmatch WHERE COALESCE(resultat,"00-00") = SUBSTR(COALESCE(resultat,"00-00"),1,2)';
+//requete pour voir si un match est gagné ou non
+$qMatchPerdu = 'SELECT * FROM unmatch WHERE SUBSTR(Resultat,1,2) < SUBSTR(Resultat,4,2) AND Resultat IS NOT NULL AND Id_UnMatch = :idMatch';
 
 //requete pour compter le nombre de joueurs
 $qNbJoueurs = 'SELECT COUNT(*) FROM joueur';
@@ -322,9 +324,9 @@ function AfficherJoueurs() {
             }
             if($key == 'Statut') {
                 if($value == "Blesse") {
-                    echo '<td style="background-color: red; color: white;">' . $value . '</td>';
+                    echo '<td><p style="background-color: #ff6666; color: white; padding: 5px; border-radius:25px;">'.$value.'</p></td>';
                 } else if ($value == "Suspendu" || $value == "Absent") {
-                    echo '<td style="background-color: orange; color: white;">' . $value . '</td>';
+                    echo '<td><p style="background-color: orange; color: white; padding: 5px; border-radius:25px;">'.$value.'</p></td>';
                 } else {
                     echo '<td>' . $value . '</td>';
                 }
@@ -655,9 +657,13 @@ function AfficherMatchs() {
                 echo '<td>' . date('d/m/Y à H:i', strtotime($value)) . '</td>';
             } elseif ($key == 'Resultat') {
                 if($value == null) {
-                    echo "<td><input style=\"width: fit-content; margin: 0;\" type=\"text\" name=\"".$idMatch."\" placeholder=\"Equipe-Adversaires: 00-00\" min=\"5\" max=\"5\" onkeyup=\"this.value = scoreMatch(this.value);\" oninput=\"this.value = this.value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1');\"><button type=\"submit\" name=\"boutonResultats\" value=\"".$idMatch."\" style=\"width: fit-content; margin: 0; padding: 2px;\" class=\"boutons\"><img class=\"imageIcone\" src=\"images/valider.png\"></button></td>";
+                    echo "<td><input style=\"background-color: #fffffff0; width: fit-content; margin: 0;\" type=\"text\" name=\"".$idMatch."\" placeholder=\"Equipe-Adversaires: 00-00\" min=\"5\" max=\"5\" onkeyup=\"this.value = scoreMatch(this.value);\" oninput=\"this.value = this.value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1');\"><button type=\"submit\" name=\"boutonResultats\" value=\"".$idMatch."\" style=\"width: fit-content; margin: 0; padding: 2px;\" class=\"boutons\"><img class=\"imageIcone\" src=\"images/valider.png\"></button></td>";
                 } else {
-                    echo '<td>'.$value.'</td>';
+                    if(matchPerdu($idMatch) != 0) {
+                        echo '<td><p style="background-color: #ff6666; color: white; padding: 5px; border-radius:25px; width: fit-content; margin-left:35%;">'.$value.'  &ensp; PERDU</p></td>';
+                    } else {
+                        echo '<td>'.$value.'</td>';
+                    }
                 }
             } else {
                 echo '<td>' . $value . ' </td>';
@@ -667,9 +673,9 @@ function AfficherMatchs() {
         if(MatchValide($idMatch) < 5) {
             echo '
             <td>
-                <button type="submit" name="boutonConsulter" value="' . $idMatch . '" 
-                class="boutonConsulter" formaction="feuilleDeMatch.php" style="background-color:red;">
-                <img src="images/oeil2.png" class="imageIcone" alt="icone consulter">
+                <button style="color: darkred;" type="submit" name="boutonConsulter" value="' . $idMatch . '" 
+                class="boutonConsulter" formaction="feuilleDeMatch.php">
+                <img src="images/warning.png" class="imageIcone" alt="icone consulter">
                 <span>Consulter</span>
                 </button>
             </td>';
@@ -685,15 +691,13 @@ function AfficherMatchs() {
         }
         echo '
             <td>
-                <button type="submit" name="boutonModifier" value="' . $idMatch . '" class="boutonModifier" formaction="modifierMatch.php">
+                <button type="submit" style="margin: 0;" name="boutonModifier" value="' . $idMatch . '" class="boutonModifier" formaction="modifierMatch.php">
                     <img src="images/edit.png" class="imageIcone" alt="icone modifier">
-                    <span>Modifier</span>
                 </button>
             </td>
             <td>
-                <button type="submit" name="boutonSupprimer" value="' . $idMatch . '" class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce match ?\');" formaction="match.php" >
+                <button type="submit" style="margin: 0;" name="boutonSupprimer" value="' . $idMatch . '" class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce match ?\');" formaction="match.php" >
                     <img src="images/bin.png" class="imageIcone" alt="icone supprimer">
-                    <span>Supprimer</span>
                 </button>
             </td>
         </tr>';
@@ -1175,21 +1179,24 @@ function DefaitesEquipe() {
     return $res[0];
 }
 
-function EgalitesEquipe() {
+function matchPerdu($idMatch) {
     // connexion a la BD
     $linkpdo = connexionBd();
     // preparation de la requete sql
-    $req = $linkpdo->prepare($GLOBALS['qEgalites']);
+    $req = $linkpdo->prepare($GLOBALS['qMatchPerdu']);
     if ($req == false) {
         die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
     }
     // execution de la requete sql
-    $req->execute();
+    $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
         die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
     }
-    $res = $req->fetch();
-    return $res[0];
+    if($req->rowCount() != 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 ?>

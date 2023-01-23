@@ -37,21 +37,19 @@
     <?php 
     $v = json_encode(VictoiresEquipe()); 
     $d = json_encode(DefaitesEquipe()); 
-    $e = json_encode(EgalitesEquipe());
     echo '<canvas id="pie-chartStats"></canvas>';
     ?>
     <script>
         var value1 = <?php echo $v ?>;
         var value2 = <?php echo $d ?>;
-        var value3 = <?php echo $e ?>;
 
         // Définir les données pour les sections du graphique
         var data = {
-            labels: ['Nombre de victoires', 'Nombre de défaites', 'Nombre d\'égalités'],
+            labels: ['Nombre de victoires', 'Nombre de défaites'],
             datasets: [{
-                data: [value1, value2, value3], // les valeurs en pourcentage
-                backgroundColor: ['#8bc196', '#ff7474', '#ffa64d'],
-                hoverBackgroundColor: ['#6aaf78', '#ff3333', '#e67300']
+                data: [value1, value2], // les valeurs en pourcentage
+                backgroundColor: ['#8bc196', '#ff7474'],
+                hoverBackgroundColor: ['#6aaf78', '#ff3333']
             }]
         };
         // Récupérer le conteneur pour le graphique
