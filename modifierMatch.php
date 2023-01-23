@@ -11,7 +11,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
   <link rel="stylesheet" href="style/style.css">
 </head>
-<script src="js/javascript.js"></script>
+
 <?php
     require('FUNCTIONS.php');
 ?>
@@ -33,10 +33,10 @@
   </div>
 
     <div class="center" id="boutonsValiderAnnuler">
-      <button type="submit" formaction="gestionMatch.php" name="boutonAnnuler" class="boutonAnnuler"><img src="images/annuler.png" class="imageIcone" alt="icone annuler"><span>Annuler&ensp;</span></button>
-      <button type="submit" formaction="gestionMatch.php?params=modif" value="<?php echo $_POST['boutonModifier']; ?>" name="boutonValider" class="boutonEdit" id="boutonValider"><img src="images/edit.png" class="imageIcone" alt="icone valider"><span>Appliquer</span></button>
+      <button type="submit" formaction="match.php" name="boutonAnnuler" class="boutonAnnuler"><img src="images/annuler.png" class="imageIcone" alt="icone annuler"><span>Annuler&ensp;</span></button>
+      <button type="submit" formaction="match.php?params=modif" value="<?php echo $_POST['boutonModifier']; ?>" name="boutonEdit" class="boutonEdit" id="boutonValider"><img src="images/edit.png" class="imageIcone" alt="icone valider"><span>Appliquer</span></button>
     </div>
   </form>
-  <script src="js/javascript.js"></script>
+  
 </body>
 </html>

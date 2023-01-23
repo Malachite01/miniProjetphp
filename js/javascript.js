@@ -53,3 +53,46 @@ function scoreMatch (value) {
     }
     return value;
 }
+
+function fenOpen(aCacher) {
+    aCacher1 = document.querySelector("." + aCacher);
+    aCacher1.style.display = "block";
+    aCacher1.classList.toggle('fenButtonOn');
+    aCacher1.classList.remove('fenButtonOff');
+    var elements = document.querySelectorAll( "body > *:not(.validationPopup):not(.erreurPopup):not(.supprPopup):not(.editPopup):not(.aCacher)" );
+    Array.from( elements ).forEach( s => s.style.filter = "grayscale(100%) blur(3px)");
+}
+
+function fenClose(aCacher) {
+    aCacher1 = document.querySelector("." + aCacher);
+    aCacher1.classList.toggle('fenButtonOn');
+    aCacher1.classList.add('fenButtonOff');
+    var elements = document.querySelectorAll( "body > *:not(.validationPopup):not(.erreurPopup):not(.supprPopup):not(.editPopup):not(.aCacher)" );
+    Array.from( elements ).forEach( s => s.style.filter = "grayscale(0%)  blur(0px)");
+    setTimeout(function(){
+        aCacher1.style.display = "none";
+    }, 600);
+}
+
+function deCache(div) {
+    aCacher = document.querySelector("." + div);
+    if(aCacher.classList.contains('transparent')) {
+        aCacher.classList.remove('transparent');
+    } 
+}
+
+function ajouterSelection(bouton) {
+    let form = document.getElementById("formAjoutFeuille");
+    let hiddenInput = document.createElement("input");
+    hiddenInput.setAttribute("type", "hidden");
+    hiddenInput.setAttribute("name", "valeurJoueur");
+    hiddenInput.setAttribute("id", "valeurJoueur");
+    hiddenInput.setAttribute("value", "true");
+    hiddenInput.value = bouton.value;
+    form.appendChild(hiddenInput);
+}
+
+function deleteSelection() {
+    document.getElementById("valeurJoueur").remove();
+}
+

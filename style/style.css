@@ -270,7 +270,6 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked {
     accent-color: var(--couleurBouton);
 }
-/* MENU pc */
 .logo {
     position: absolute;
     top: 3px;
@@ -530,7 +529,7 @@ div.miseFormeConnexion label {
 }
 #imageJoueur {
     max-width: 100px;
-    border-radius: 50%;
+    clip-path: circle(50% at center);
 }
 #boutonsValiderAnnuler {
     position: relative;
@@ -571,10 +570,21 @@ div.miseFormeConnexion label {
     align-items: center;
     justify-items: center;
 }
+.boutonAjouterA {
+    width: fit-content;
+    justify-self: center;
+    align-self: center;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
 .boutons {
     color:var(--policeBlanche);
     background-color: var(--couleurBouton);
     padding: 9px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+button > img,
+button > span {
+    vertical-align: middle;
 }
 .boutons:hover {
     animation: hoverWave .15s cubic-bezier(.16,.83,.59,.91) forwards;
@@ -588,6 +598,7 @@ div.miseFormeConnexion label {
     background-color: var(--couleurBoutonAnnuler);
     color:var(--policeBlanche);
     padding: 9px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .boutonAnnuler:hover {
     animation: hoverWaveAnnuler .15s cubic-bezier(.16,.83,.59,.91) forwards;
@@ -601,6 +612,7 @@ div.miseFormeConnexion label {
     background-color: var(--couleurBoutonValider);
     color:var(--policeBlanche);
     padding: 9px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .boutonValider:hover {
     animation: hoverWaveValider .15s cubic-bezier(.16,.83,.59,.91) forwards;
@@ -615,6 +627,7 @@ div.miseFormeConnexion label {
     color:var(--policeBlanche);
     padding: 3px;
     margin: 7px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .boutonSupprimer:hover {
     animation: hoverWaveAnnuler .15s cubic-bezier(.16,.83,.59,.91) forwards;
@@ -629,6 +642,7 @@ div.miseFormeConnexion label {
     color:var(--policeBlanche);
     padding: 3px;
     margin: 7px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .boutonModifier:hover {
     animation: hoverWaveModifier .15s cubic-bezier(.16,.83,.59,.91) forwards;
@@ -641,6 +655,7 @@ div.miseFormeConnexion label {
     background-color: var(--couleurPopupEdit);
     color:var(--policeBlanche);
     padding: 9px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .boutonEdit:hover {
     animation: hoverWaveModifier .15s cubic-bezier(.16,.83,.59,.91) forwards;
@@ -649,7 +664,20 @@ div.miseFormeConnexion label {
 .boutonEdit:active {
     animation: hoverWaveModifier .1s cubic-bezier(.16,.83,.59,.91) forwards;
 }
-
+.boutonConsulter {
+    background-color: lightgray;
+    color:var(--policeBlanche);
+    padding: 3px;
+    margin: 7px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+.boutonConsulter:hover {
+    animation: hoverWaveConsulter .15s cubic-bezier(.16,.83,.59,.91) forwards;
+    cursor: pointer;
+}
+.boutonConsulter:active {
+    animation: hoverClickConsulter .1s cubic-bezier(.16,.83,.59,.91) forwards;
+}
 @keyframes hoverWave {
     0% {
         background: radial-gradient(circle at center, var(--couleurBoutonHover) 0 0%, var(--couleurBouton) 0);
@@ -1006,6 +1034,125 @@ div.miseFormeConnexion label {
 
     }
 }
+@keyframes hoverWaveConsulter {
+    0% {
+        background: radial-gradient(circle at center, grey 0 0%, lightgrey 0);
+
+    }
+    10% {
+        background: radial-gradient(circle at center, grey 0 10%, lightgrey 0);
+
+    }
+    20% {
+        background: radial-gradient(circle at center, grey 0 20%, lightgrey 0);
+
+    }
+    30% {
+        background: radial-gradient(circle at center, grey 0 30%, lightgrey 0);
+
+    }
+    40% {
+        background: radial-gradient(circle at center, grey 0 40%, lightgrey 0);
+
+    }
+    50% {
+        background: radial-gradient(circle at center, grey 0 50%, lightgrey 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, grey 0 60%, lightgrey 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, grey 0 70%, lightgrey 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, grey 0 80%, lightgrey 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, grey 0 90%, lightgrey 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, grey 0 100%, lightgrey 0);
+
+    }
+}
+@keyframes hoverClickConsulter {
+    50% {
+        background: radial-gradient(circle at center, lightgrey 0 10%, lightgrey 0);
+
+    }
+    60% {
+        background: radial-gradient(circle at center, lightgrey 0 30%, lightgrey 0);
+
+    }
+    70% {
+        background: radial-gradient(circle at center, lightgrey 0 40%, lightgrey 0);
+
+    }
+    80% {
+        background: radial-gradient(circle at center, lightgrey 0 30%, lightgrey 0);
+
+    }
+    90% {
+        background: radial-gradient(circle at center, lightgrey 0 10%, lightgrey 0);
+
+    }
+    100% {
+        background: radial-gradient(circle at center, lightgrey 0 0%, lightgrey 0);
+
+    }
+}
+
+.aCacher {
+    display: none;
+    width: 0;
+    height: 0;
+    position: absolute;
+    justify-self: center;
+    z-index: 2;
+}
+
+
+.fenButtonOn {
+    animation: fenBoutonApparition .6s forwards;
+    animation-iteration-count: 1;
+}
+.fenButtonOff {
+    animation: fenBoutonDisparition .6s forwards;
+    animation-iteration-count: 1;
+}
+
+@keyframes fenBoutonApparition {
+    0% {
+        clip-path: circle(0vh at center);
+
+    }
+    100% {
+        clip-path: circle(150vh at center);
+        width: 100%;
+        height: 100%;
+    }
+}
+@keyframes fenBoutonDisparition {
+    0% {
+        clip-path: circle(150vh at center);
+        width: 100%;
+        height: 100%;
+    }
+    100% {
+        clip-path: circle(0vh at center);
+        width: 0%;
+        height: 0%;
+    }
+}
+
+.transparent {
+    filter: opacity(0%);
+}
 
 .imageIcone {
     width: 30px;
@@ -1052,6 +1199,7 @@ div.miseFormeConnexion label {
     align-self: center;
     justify-self: center;
     z-index: 3;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .erreurPopup {
@@ -1068,6 +1216,7 @@ div.miseFormeConnexion label {
     align-self: center;
     justify-self: center;
     z-index: 3;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .supprPopup {
@@ -1084,6 +1233,7 @@ div.miseFormeConnexion label {
     align-self: center;
     justify-self: center;
     z-index: 3;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .editPopup {
@@ -1100,6 +1250,7 @@ div.miseFormeConnexion label {
     align-self: center;
     justify-self: center;
     z-index: 3;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 .alertPopup {
@@ -1116,6 +1267,7 @@ div.miseFormeConnexion label {
     align-self: center;
     justify-self: center;
     z-index: 3;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
 #boutonsValiderAnnuler {
@@ -1167,7 +1319,7 @@ div.miseFormeConnexion label {
         grid-template-columns: max-content 1fr .1fr;
     }
 }
-@media screen and (max-width: 600px){
+@media screen and (max-width: 1200px){
     thead {
         display: none;
     }
@@ -1229,6 +1381,70 @@ div.miseFormeConnexion label {
     #tbodyGererJoueurs td:nth-child(9)::before{
         content: "Statut :";
     }
+    #tbodyGererDispos td::before{
+        position: absolute;
+        font-weight: bold;
+        font-size: 1.05em;
+        left: 0;
+        width: 50%;
+        text-align: left;
+    }
+    #tbodyGererDispos td:first-child::before{
+        content: "Photo :";
+    }
+    #tbodyGererDispos td:nth-child(2)::before{
+        content: "Nom :";
+    }
+    #tbodyGererDispos td:nth-child(3)::before{
+        content: "Prenom :";
+    }
+    #tbodyGererDispos td:nth-child(4)::before{
+        content: "Taille :";
+    }
+    #tbodyGererDispos td:nth-child(5)::before{
+        content: "Poids :";
+    }
+    #tbodyGererDispos td:nth-child(6)::before{
+        content: "Commentaires :";
+    }
+    #tbodyGererDispos td:nth-child(7)::before{
+        content: "Poste prefere :";
+    }
+    #tbodyGererSelection td::before{
+        position: absolute;
+        font-weight: bold;
+        font-size: 1.05em;
+        left: 0;
+        width: 50%;
+        text-align: left;
+    }
+    #tbodyGererSelection td:first-child::before{
+        content: "Photo :";
+    }
+    #tbodyGererSelection td:nth-child(2)::before{
+        content: "Nom :";
+    }
+    #tbodyGererSelection td:nth-child(3)::before{
+        content: "Prenom :";
+    }
+    #tbodyGererSelection td:nth-child(4)::before{
+        content: "Taille :";
+    }
+    #tbodyGererSelection td:nth-child(5)::before{
+        content: "Poids :";
+    }
+    #tbodyGererSelection td:nth-child(6)::before{
+        content: "Commentaires :";
+    }
+    #tbodyGererSelection td:nth-child(7)::before{
+        content: "Poste prefere :";
+    }
+    #tbodyGererSelection td:nth-child(8)::before{
+        content: "Poste pour le match :";
+    }
+    #tbodyGererSelection td:nth-child(9)::before{
+        content: "Note :";
+    }
     #tbodyGererMatchs td::before{
         position: absolute;
         font-weight: bold;
@@ -1247,7 +1463,7 @@ div.miseFormeConnexion label {
         content: "Lieu :";
     }
     #tbodyGererMatchs td:nth-child(4)::before{
-        content: "Resultats :";
+        content: "Score :";
     }
 }
 @media screen and (max-width: 700px) {
@@ -1271,5 +1487,73 @@ div.miseFormeConnexion label {
 
 .imageJoueurGestion {
     max-width: 70px;
-    border-radius: 200px;
+    clip-path: circle(50% at center);
+}
+
+.progress-bar {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    height: 20px;
+    background-color: lightgray;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.progress {
+    z-index: 2;
+    border-radius: 5px;
+    height: 100%;
+}
+  
+.percentage {
+    z-index: 2;
+    margin-left: -40px;
+    text-align: center;
+}
+
+.titreFeuille {
+    color: var(--policeNoire);
+    font-size: 1.5em;
+    text-decoration: underline;
+}
+
+.msgSelection {
+    font-family: Georama;
+    display: grid;
+    justify-self: center;
+    font-size: 1.2em;
+    color: red;
+    text-align: center;
+}
+
+h3 {
+    margin-top: 100px;
+    margin-left: 20px;
+    text-decoration: underline;
+    font-size: 1.5em;
+    color: var(--couleurBoutonHover);
+}
+
+#pie-chart {
+    position: relative;
+    bottom: -70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#noteJoueur {
+    position: absolute;
+    top: 100px;
+    right: 20px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#tauxVictoire {
+    position: absolute;
+    top: 140px;
+    right: 20px;
+    font-size: 2em;
+    font-weight: bold; 
 }

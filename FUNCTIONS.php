@@ -44,9 +44,46 @@ $qAfficherUnMatch = 'SELECT Id_UnMatch,Nom_Adversaire,Date_Heure_Match,Lieu_Renc
 //requete de modification d'un match
 $qModifierInformationsMatch = 'UPDATE unmatch SET Nom_Adversaire = :nomAdversaire, Date_Heure_Match = :dateHeureMatch, Lieu_Rencontre = :lieuRencontre, Resultat = :resultat WHERE Id_UnMatch = :idMatch';
 
+//requete pour entrer les resultats d'un match
+$qEntrerResultats = 'UPDATE unmatch SET Resultat = :resultat WHERE Id_UnMatch = :idMatch';
+
 // requete pour supprimer un membre de la BD
 $qSupprimerMatch = 'DELETE FROM unmatch WHERE Id_UnMatch = :idMatch';
 
+//* feuilles de matchs
+//requete pour afficher tous les joueurs
+$qAfficherJoueursDispos = 'SELECT joueur.Id_Joueur, joueur.Photo, joueur.Nom, joueur.Prenom, joueur.Taille, joueur.Poids, joueur.Commentaires, joueur.Poste_Prefere FROM joueur WHERE joueur.Statut = "Actif" AND joueur.Id_Joueur NOT IN (SELECT participe.Id_Joueur FROM participe WHERE participe.Id_UnMatch = :idMatch)';
+
+//requete pour afficher tous les joueurs
+$qAfficherSelectionMatch = 'SELECT joueur.Id_Joueur, joueur.Photo, joueur.Nom, joueur.Prenom, joueur.Taille, joueur.Poids, joueur.Commentaires, joueur.Poste_Prefere, participe.Role, participe.Notation, participe.Id_Joueur, participe.Id_UnMatch FROM joueur,participe WHERE joueur.Id_Joueur = participe.Id_Joueur AND participe.Id_UnMatch = :idMatch ';
+
+// requete pour ajouter un joueur a la selection d'un match
+$qAjouterASelection = 'INSERT INTO participe (Id_Joueur,Id_UnMatch,Notation,Role) VALUES (:idJoueur , :idMatch, :notation, :role)';
+
+// requete pour ajouter un joueur a la selection d'un match
+$qRetirerASelection = 'DELETE FROM participe WHERE Id_UnMatch = :idMatch AND Id_Joueur = :idJoueur';
+
+//requete pour savoir combien de joueurs sont indisponibles
+$qJoueursIndisponibles = 'SELECT * FROM joueur WHERE Statut IN ("Blesse", "Suspendu", "Absent")';
+
+//requete pour verifier que les 5 postes differents au volley sont bien présent dans la selection
+$qMatchValide = 'SELECT DISTINCT joueur.Poste_Prefere
+FROM participe
+JOIN joueur ON participe.Id_Joueur = joueur.Id_Joueur
+WHERE participe.Id_UnMatch = :idMatch';
+
+//*stats
+//requete pour afficher les stats d'un joueur
+$qAfficherStatsUnJoueur = 'SELECT Id_Joueur, Photo, Statut, Commentaires, Nom, Prenom, Numero_Licence, Poste_Prefere FROM joueur WHERE Id_Joueur = :idJoueur';
+
+//requete pour avoir le nombre de selections en tant que titulaire
+$qSelectionsTitulaire = 'SELECT participe.* FROM participe WHERE participe.Role = 1 AND participe.Id_Joueur = :idJoueur GROUP BY participe.Id_UnMatch';
+
+//requete pour avoir le nombre de selections en tant que remplacant
+$qSelectionsRemplacant = 'SELECT participe.* FROM participe WHERE participe.Role = 0 AND participe.Id_Joueur = :idJoueur GROUP BY participe.Id_UnMatch';
+
+//moyenne du joueur
+$qMoyenneUnJoueur = 'SELECT AVG(participe.Notation) as Moyenne FROM participe WHERE participe.Id_Joueur = :idJoueur';
 
 //fonction pour se connecter a la bd (utilisée tout le temps)
 function connexionBd()
@@ -69,8 +106,7 @@ function connexionBd()
 function faireMenu()
 {
     testConnexion();
-    // $effacer = ["/leSite/", ".php", "?params=suppr"];
-    // $get_url = str_replace($effacer, "", $_SERVER['REQUEST_URI']);
+    echo '<script src="js/javascript.js"></script>';
     $get_url = $_SERVER['REQUEST_URI'];
     $idAChercher = "";
     if (stripos($get_url, "joueur")) {
@@ -87,26 +123,15 @@ function faireMenu()
         <div class="nav-links">
           <ul class="nav-ul">
             
-            <li><a id="Joueurs">Joueurs</a>
-                <ul class="sousMenu">
-                    <li><a href="ajoutJoueur.php" >Ajouter un joueur</a></li>
-                    <li><a href="gestionJoueurs.php" >Gerer l\'equipe</a></li>
-                </ul>
-            </li>        
+            <li><a id="Joueurs" href="joueur.php">Equipe</a></li>        
             
             <div class="separateur"></div>
             
-            <li><a id="Matchs">Matchs</a>
-                <ul class="sousMenu">
-                    <li><a href="ajoutMatch.php">Ajouter un match</a></li>
-                    <li><a href="gestionMatch.php">Gerer les matchs</a></li>
-                    <li><a href="finDeMatch.php">Fin de match</a></li>
-                </ul>
-            </li>
+            <li><a id="Matchs" href="match.php">Matchs</a></li>
 
             <div class="separateur"></div>
             
-            <li><a id="Statistiques" href="#">Statistiques</a>
+            <li><a id="Statistiques" href="statistiques.php">Statistiques</a>
             </li>
 
             <li>
@@ -283,8 +308,17 @@ function AfficherJoueurs() {
                 echo '<td><img class="imageJoueurGestion" src="' . $value . '" alt="photo du joueur"></td>';
             }
             // selectionne toutes les colonnes $key necessaires
-            if ($key == 'Nom' || $key == 'Prenom' || $key == 'Numero_Licence' || $key == 'Poste_Prefere' || $key == 'Statut') {
+            if ($key == 'Nom' || $key == 'Prenom' || $key == 'Numero_Licence' || $key == 'Poste_Prefere') {
                 echo '<td>' . $value . '</td>';
+            }
+            if($key == 'Statut') {
+                if($value == "Blesse") {
+                    echo '<td style="background-color: red; color: white;">' . $value . '</td>';
+                } else if ($value == "Suspendu" || $value == "Absent") {
+                    echo '<td style="background-color: orange; color: white;">' . $value . '</td>';
+                } else {
+                    echo '<td>' . $value . '</td>';
+                }
             }
             if ($key == 'Date_Naissance') {
                 echo '<td>' . date('d/m/Y', strtotime($value)) . '</td>';
@@ -298,6 +332,13 @@ function AfficherJoueurs() {
         }
         echo '
             <td>
+                <button type="submit" name="boutonConsulter" value="' . $idJoueur . '" 
+                class="boutonConsulter" formaction="statsJoueur.php">
+                <img src="images/oeil2.png" class="imageIcone" alt="icone consulter">
+                <span>Consulter</span>
+                </button>
+            </td>
+            <td>
                 <button type="submit" name="boutonModifier" value="' . $idJoueur . '" class="boutonModifier" formaction="modifierJoueur.php">
                     <img src="images/edit.png" class="imageIcone" alt="icone modifier">
                     <span>Modifier</span>
@@ -305,7 +346,7 @@ function AfficherJoueurs() {
             </td>
             <td>
                 <button type="submit" name="boutonSupprimer" value="' . $idJoueur . '
-                " class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce joueur ?\');" >
+                " class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce joueur ?\');" formaction="joueur.php">
                     <img src="images/bin.png" class="imageIcone" alt="icone supprimer">
                     <span>Supprimer</span>
                 </button>
@@ -366,7 +407,7 @@ function afficherUnJoueur($idJoueur) {
             if ($key == 'Photo') {
                 echo '
                 <label for="champPhoto">Photo du joueur :</label>
-                <input type="file" name="champPhoto" id="champPhoto" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/bmp" onchange="refreshImageSelector(\'champPhoto\',\'imageJoueur\')">
+                <input type="file" name="champPhoto" id="champPhoto" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/bmp, image/gif" onchange="refreshImageSelector(\'champPhoto\',\'imageJoueur\')">
                 <img src="' . AfficherImageJoueur($idJoueur) . '" id="imageJoueur" alt="image du joueur">
                 ';
                 echo '<input type="hidden" value="' . AfficherImageJoueur($idJoueur) . '" name="hiddenImageLink">';
@@ -490,7 +531,9 @@ function supprimerJoueur($idJoueur)
     // connexion a la base de donnees
     $linkpdo = connexionBd();
     //on supprime le membre
-    unlink(supprimerImageJoueur($idJoueur));
+    if(file_exists(supprimerImageJoueur($idJoueur))) {
+        unlink(supprimerImageJoueur($idJoueur));
+    }
     $req = $linkpdo->prepare($GLOBALS['qSupprimerJoueur']);
     if ($req == false) {
         die('Erreur ! Il y a un probleme lors de la preparation de la requete pour supprimer un joueur de la BD');
@@ -590,6 +633,7 @@ function AfficherMatchs() {
     if ($req == false) {
         die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des matchs');
     }
+    $idMatch=0;
     // permet de parcourir toutes les lignes de la requete
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
         echo '<tr>';
@@ -600,10 +644,35 @@ function AfficherMatchs() {
                 $idMatch = $value;
             } elseif ($key == 'Date_Heure_Match') {
                 echo '<td>' . date('d/m/Y à H:i', strtotime($value)) . '</td>';
+            } elseif ($key == 'Resultat') {
+                if($value == null || $value == 0) {
+                    echo "<td><input style=\"width: fit-content; margin: 0;\" type=\"text\" name=\"".$idMatch."\" placeholder=\"Equipe-Adversaires: 00-00\" min=\"5\" max=\"5\" onkeyup=\"this.value = scoreMatch(this.value);\" oninput=\"this.value = this.value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1');\"><button type=\"submit\" name=\"boutonResultats\" value=\"".$idMatch."\" style=\"width: fit-content; margin: 0; padding: 2px;\" class=\"boutons\"><img class=\"imageIcone\" src=\"images/valider.png\"></button></td>";
+                } else {
+                    echo '<td>'.$value.'</td>';
+                }
             } else {
                 echo '<td>' . $value . ' </td>';
             }
             
+        }
+        if(MatchValide($idMatch) < 5) {
+            echo '
+            <td>
+                <button type="submit" name="boutonConsulter" value="' . $idMatch . '" 
+                class="boutonConsulter" formaction="feuilleDeMatch.php" style="background-color:red;">
+                <img src="images/oeil2.png" class="imageIcone" alt="icone consulter">
+                <span>Consulter</span>
+                </button>
+            </td>';
+        } else {
+            echo '
+            <td>
+                <button type="submit" name="boutonConsulter" value="' . $idMatch . '" 
+                class="boutonConsulter" formaction="feuilleDeMatch.php">
+                <img src="images/oeil2.png" class="imageIcone" alt="icone consulter">
+                <span>Consulter</span>
+                </button>
+            </td>';
         }
         echo '
             <td>
@@ -613,7 +682,7 @@ function AfficherMatchs() {
                 </button>
             </td>
             <td>
-                <button type="submit" name="boutonSupprimer" value="' . $idMatch . '" class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce match ?\');" >
+                <button type="submit" name="boutonSupprimer" value="' . $idMatch . '" class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir supprimer ce match ?\');" formaction="match.php" >
                     <img src="images/bin.png" class="imageIcone" alt="icone supprimer">
                     <span>Supprimer</span>
                 </button>
@@ -662,8 +731,8 @@ function afficherUnMatch($idMatch) {
                 ';
             } elseif ($key == 'Resultat'){
                 echo '
-                <label for="champResultat">Resultats (optionnel) :</label>
-                <input type="text" name="champResultat" placeholder="Entrez les resultats: 00-00" min="5" max="5" onkeypress="this.value = scoreMatch(this.value);" oninput="this.value = this.value.replace(/[^0-9.-]/g, \'\').replace(/(\..*)\./g, \'$1\');" value="'.$value.'">
+                <label for="champResultat">Score (optionnel) :</label>
+                <input type="text" name="champResultat" placeholder="Entrez le score: 00-00" min="5" max="5" onkeypress="this.value = scoreMatch(this.value);" oninput="this.value = this.value.replace(/[^0-9.-]/g, \'\').replace(/(\..*)\./g, \'$1\');" value="'.$value.'">
                 <span></span>
                 ';
             } 
@@ -693,6 +762,26 @@ function modifierMatch($nomAdversaire, $dateHeureMatch, $lieuRencontre, $resulta
     }
 }
 
+// fonction qui permet de modifier un match de la BD
+function entrerResultats($resultat, $idMatch) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qEntrerResultats']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un match');
+    }
+    // execution de la requete sql
+    $req->execute(array(
+        ':resultat' => clean($resultat),
+        ':idMatch' => clean($idMatch)
+    ));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un match');
+    }
+    $req->debugDumpParams();
+}
+
 // fonction qui permet de supprimer un match a partir de son id
 function supprimerMatch($idMatch)
 {
@@ -710,4 +799,316 @@ function supprimerMatch($idMatch)
     }
 }
 
+//!FEUILLE DE MATCHS
+
+//fonction pour afficher l'intitulé du match
+function afficherUnMatchFeuille($idMatch) {  
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAfficherUnMatch']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher un match a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idMatch' => clean($idMatch)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour afficher un match a la BD');
+    }
+    // permet de parcourir la ligne de la requetes 
+    while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
+        // permet de parcourir toutes les colonnes de la requete 
+        foreach ($data as $key => $value) {
+            // recuperation de toutes les informations du membre de la session dans des inputs 
+            if ($key == 'Nom_Adversaire') {
+                echo '
+                <h2 class="titreFeuille">Match contre : '.$value.', 
+                ';
+                echo '<input type="hidden" value="" name="hiddenImageLink">';
+            } elseif ($key == 'Date_Heure_Match') {
+                echo'
+                le : '.$value.', 
+                ';
+            } elseif ($key == 'Lieu_Rencontre'){
+                echo '
+                a : '.$value.' </h2>
+                ';
+            } elseif ($key == 'Resultat'){
+            } 
+        }
+    }
+}
+
+//fonction pour afficher tous les joueurs sélectionnés d'un match
+function AfficherJoueursSelection($idMatch) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAfficherSelectionMatch']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idMatch' => clean($idMatch)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    if($req->rowCount() == 0) {
+        echo '<p class="msgSelection">Aucun joueur selectionne pour le moment.</p>';
+    }
+    // permet de parcourir toutes les lignes de la requete
+    while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
+        echo '<tr>';
+        // permet de parcourir toutes les colonnes de la requete
+        foreach ($data as $key => $value) {
+            // recuperation valeurs importantes dans des variables
+            if ($key == 'Id_Joueur') {
+                $idJoueur = $value;
+            }
+            if($key == 'Photo') {
+                echo '<td><img class="imageJoueurGestion" src="' . $value . '" alt="photo du joueur"></td>';
+            }
+            // selectionne toutes les colonnes $key necessaires
+            if ($key == 'Nom' || $key == 'Prenom' || $key == 'Commentaires' || $key == 'Poste_Prefere' || $key == 'Statut' || $key == 'Notation') {
+                echo '<td>' . $value . '</td>';
+            }
+            if($key == 'Role') {
+                if($value == 1) {
+                    $value = "Titulaire";
+                } else {
+                    $value = "Remplacant";
+                }
+                echo '<td>' . $value . '</td>';
+            }
+            if( $key == 'Taille') {
+                echo '<td>' . $value . 'cm </td>';
+            }
+            if( $key == 'Poids') {
+                echo '<td>' . $value . 'kg </td>';
+            }
+        }
+        echo '
+            <td>
+                <button type="submit" name="boutonSupprimer" value="' . $idJoueur . '
+                " class="boutonSupprimer" onclick="return confirm(\'Êtes vous sûr de vouloir retirer ce joueur de la sélection?\');" formaction="feuilleDeMatch.php">
+                    <img src="images/annuler.png" class="imageIcone" alt="icone supprimer">
+                    <span>Retirer</span>
+                </button>
+            </td>
+        </tr>';
+    }
+}
+
+//fonction pour afficher tous les joueurs disponible a la selection
+function AfficherJoueursDispos($idMatch) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAfficherJoueursDispos']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idMatch' => clean($idMatch)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // permet de parcourir toutes les lignes de la requete
+    while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
+        echo '<tr>';
+        // permet de parcourir toutes les colonnes de la requete
+        foreach ($data as $key => $value) {
+            // recuperation valeurs importantes dans des variables
+            if ($key == 'Id_Joueur') {
+                $idJoueur = $value;
+            }
+            if($key == 'Photo') {
+                echo '<td><img class="imageJoueurGestion" src="' . $value . '" alt="photo du joueur"></td>';
+            }
+            // selectionne toutes les colonnes $key necessaires
+            if ($key == 'Nom' || $key == 'Prenom' || $key == 'Commentaires' || $key == 'Poste_Prefere') {
+                echo '<td>' . $value . '</td>';
+            }
+            if( $key == 'Taille') {
+                echo '<td>' . $value . 'cm </td>';
+            }
+            if( $key == 'Poids') {
+                echo '<td>' . $value . 'kg </td>';
+            }
+        }
+        echo '
+            <td>
+                <button type="button" name="boutonAjouterJoueurFeuille" class="boutons boutonAjouterA" onclick="fenOpen(\'aCacher\'),deCache(\'aCacher\'),ajouterSelection(this)" value="'.$idJoueur.'">
+                    <span>Ajouter</span>
+                    <img style="transform: rotate(-45deg);" src="images/annuler.png" class="imageIcone" alt="icone cadenas">
+                </button>
+            </td>
+        </tr>';
+    }
+}
+
+//fonction pour ajouter un joueur a la séléction
+function ajouterJoueurASelection($idJoueur, $idMatch, $notation, $role)
+{
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAjouterASelection']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un match a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(
+        ':idJoueur' => clean($idJoueur),
+        ':idMatch' => clean($idMatch),
+        ':notation' => clean($notation),
+        ':role' => clean($role)
+    ));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour ajouter un match a la BD');
+    }
+}
+
+//fonction pour retirer un joueur de la sélection
+function retirerJoueurASelection($idJoueur, $idMatch)
+{
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qRetirerASelection']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un match a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(
+        ':idJoueur' => clean($idJoueur),
+        ':idMatch' => clean($idMatch)
+    ));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour ajouter un match a la BD');
+    }
+}
+
+//fonction pour afficher tous les joueurs disponible a la selection
+function AfficherJoueursIndispos() {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qJoueursIndisponibles']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // execution de la requete sql
+    $req->execute();
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    return $req->rowCount();
+}
+
+//fonction pour verifier si tous les postes necessaire sont bien dans la selection
+function MatchValide($idMatch) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qMatchValide']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idMatch' => clean($idMatch)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+    }
+    return $req->rowCount();
+}
+
+//!STATS PAR JOUEURS
+
+//fonction pour afficher seulement un joueur
+function afficherStatsUnJoueur($idJoueur) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qAfficherStatsUnJoueur']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idJoueur' => clean($idJoueur)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    echo '<p id="noteJoueur"> Note moyenne : ' . MoyenneUnJoueur($idJoueur).'/5</p>';
+    echo '<p id="tauxVictoire"> Taux victoire quand selectionne : A faire</p>';
+    // permet de parcourir la ligne de la requetes 
+    while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
+        // permet de parcourir toutes les colonnes de la requete 
+        foreach ($data as $key => $value) {
+            // recuperation de toutes les informations du membre de la session dans des inputs 
+            if ($key == 'Photo') {
+                echo '<img style="justify-self:center; margin-top: 50px;" src="' . AfficherImageJoueur($idJoueur) . '" id="imageJoueur" alt="image du joueur">';
+            }else if ($key == 'Statut') {
+                echo '<h2 style="color: black; font-size: 1.9em;">Statut actuel : '.$value.'<h2>';
+            } elseif ($key == 'Commentaires') {
+                echo '<p style="color: black;">Dernier commentaire : '.$value.'</p>';
+            } elseif ($key == 'Nom') {
+                echo'<div style="display:flex; position: absolute; top: -10px; left: 10px;"><h3>'.$value.' ';
+            } elseif ($key == 'Prenom'){
+                echo $value.', &ensp;&ensp;';
+            } elseif ($key == 'Numero_Licence'){
+                echo ' N°: '.$value.', ';
+            } elseif ($key == 'Poste_Prefere'){
+                echo '&ensp;&ensp;Poste prefere : '.$value.'</h3></div>';
+            }
+        }
+    }
+}
+
+function selectionsTitulaire($idJoueur) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qSelectionsTitulaire']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idJoueur' => clean($idJoueur)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    return $req->rowCount();
+}
+function selectionsRemplacant($idJoueur) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qSelectionsRemplacant']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idJoueur' => clean($idJoueur)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    return $req->rowCount();
+}
+function MoyenneUnJoueur($idJoueur) {
+    // connexion a la BD
+    $linkpdo = connexionBd();
+    // preparation de la requete sql
+    $req = $linkpdo->prepare($GLOBALS['qMoyenneUnJoueur']);
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+    }
+    // execution de la requete sql
+    $req->execute(array(':idJoueur' => clean($idJoueur)));
+    if ($req == false) {
+        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+    }
+    $moyenne = $req->fetch();
+    return round($moyenne[0],1,PHP_ROUND_HALF_EVEN);
+}
 ?>

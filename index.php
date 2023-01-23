@@ -70,6 +70,6 @@
 
     <button type="submit" name="boutonConnexion" class="boutons" id="boutonConnexion"><img src="images/unlock.png" class="imageIcone" alt="icone cadenas"><span>Connexion</span></button>
   </form>
-  <script src="js/javascript.js"></script>
+  
 </body>
 </html>
