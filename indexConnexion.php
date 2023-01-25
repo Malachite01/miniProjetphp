@@ -15,18 +15,18 @@ if (!empty($_POST['champIdentifiant']) && !empty($_POST['champMotDePasse'])) // 
 
     if ($row > 0) {
         if (password_verify($mdp, $data['lePassword'])) {
-            //page d'accueil  tableau de bord
+            //page d'accueil gestion equipe
             $_SESSION['estConnecte'] = "connecte";
             header('Location: joueur.php');
             die();
-            //Si mauvais password on redirige vers une autre page on l'on a codé une erreur du nom de 'password'
+            //Si mauvais password on redirige vers une autre page on l'on a codé une erreur du nom de 'password ou login' pour eviter le brute force
         } else {
-            header('Location: index.php?login_err=password');
+            header('Location: index.php?login_err=passwordlogin');
             die();
         }
     //Si compte inexistant
     } else {
-        header('Location: index.php?login_err=inexistant');
+        header('Location: index.php?login_err=passwordlogin');
         die();
     }
 }
