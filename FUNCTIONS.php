@@ -103,10 +103,10 @@ $qMatchsVictoirePourUnJoueur = 'SELECT COUNT(*) FROM unmatch WHERE SUBSTR(Result
 //fonction pour se connecter a la bd (utilisée tout le temps)
 function connexionBd()
 {
-    $SERVER = '127.0.0.1';
-    $DB = 'miniprojetphp';
-    $LOGIN = 'root';
-    $MDP = '';
+    $SERVER = 'localhost';
+    $DB = 'id20193102_miniprojetphp';
+    $LOGIN = 'id20193102_root';
+    $MDP = '[GbERChUx>1zkYaI';
     // tentative de connexion a la BD
     try {
         // connexion a la BD
@@ -870,8 +870,11 @@ function AfficherJoueursSelection($idMatch) {
                 echo '<td><img class="imageJoueurGestion" src="' . $value . '" alt="photo du joueur"></td>';
             }
             // selectionne toutes les colonnes $key necessaires
-            if ($key == 'Nom' || $key == 'Prenom' || $key == 'Commentaires' || $key == 'Poste_Prefere' || $key == 'Statut' || $key == 'Notation') {
+            if ($key == 'Nom' || $key == 'Prenom' || $key == 'Commentaires' || $key == 'Poste_Prefere' || $key == 'Statut') {
                 echo '<td>' . $value . '</td>';
+            }
+            if($key == 'Notation') {
+                 echo '<td>' . $value . '/5</td>';
             }
             if($key == 'Role') {
                 if($value == 1) {

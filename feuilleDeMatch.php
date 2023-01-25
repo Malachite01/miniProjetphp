@@ -105,7 +105,7 @@
             <th>Commentaires</th>
             <th>Poste prefere</th>
             <th>Role pour le match</th>
-            <th>Notation</th>
+            <th>Note pour le match</th>
         </thead>
 
         <tbody id="tbodyGererSelection">
@@ -131,7 +131,7 @@
         <th>Poids</th>
         <th>Commentaires</th>
         <th>Poste prefere</th>
-        <th>Notation moyenne</th>
+        <th>Note moyenne</th>
         <th>Ajouter a la selection</th>
         </thead>
 
