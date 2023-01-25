@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php session_start();require('FUNCTIONS.php');testConnexion();?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -12,10 +12,6 @@
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
   <link rel="stylesheet" href="style/style.css">
 </head>
-
-<?php
-    require('FUNCTIONS.php');
-?>
 
 <body>
   <div class="svgWaveContains">
@@ -100,10 +96,19 @@ if (isset($_POST['boutonValider'])) {
           <button class="boutonFermerPopup" onclick="erasePopup(\'alertPopup\')">Fermer X</button>
       </div>';
     } else {
-      entrerResultats(
-        $_POST[$inputName],
-        $_POST['boutonResultats']
-      );
+      if(MatchValide($_POST['boutonResultats']) > 5) {
+        entrerResultats(
+          $_POST[$inputName],
+          $_POST['boutonResultats']
+        );
+      } else {
+        echo'
+        <div class="erreurPopup">
+            <h2 class="txtPopup">Selection de joueurs invalide, impossible d\'ajouter un score.</h2>
+            <img src="images/annuler.png" alt="valider" class="imageIcone centerIcon">
+            <button class="boutonFermerPopup" onclick="erasePopup(\'erreurPopup\')">Fermer X</button>
+        </div>';
+      }
     }
     
   }

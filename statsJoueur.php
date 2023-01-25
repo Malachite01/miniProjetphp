@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php session_start();require('FUNCTIONS.php');testConnexion();?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -13,10 +13,6 @@
   <link rel="stylesheet" href="style/style.css">
 </head>
 <script src="js/chart.js"></script>
-
-<?php
-    require('FUNCTIONS.php');
-?>
 
 <body>
   <div class="svgWaveContains">

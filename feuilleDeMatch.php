@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php session_start();require('FUNCTIONS.php');testConnexion();?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -12,10 +12,6 @@
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
   <link rel="stylesheet" href="style/style.css">
 </head>
-
-<?php
-    require('FUNCTIONS.php');
-?>
 
 <body>
   <div class="svgWaveContains">

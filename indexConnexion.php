@@ -1,6 +1,5 @@
-<?php
+<?php session_start();
 require('FUNCTIONS.php');
-session_start();
 $linkpdo = connexionBd();
 if (!empty($_POST['champIdentifiant']) && !empty($_POST['champMotDePasse'])) // Si il existe les champs email, password et qu'il sont pas vides
 {

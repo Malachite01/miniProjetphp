@@ -1,5 +1,4 @@
 <?php
-
 // requete pour verifier qu'un joueur avec les données en parametre n'existe pas deja dans la BD
 $qJoueurIdentique = 'SELECT * FROM joueur WHERE Numero_Licence = :numeroLicence';
 
@@ -121,7 +120,6 @@ function connexionBd()
 //fonction pour faire le menu de toute l'application et toutes les pages
 function faireMenu()
 {
-    testConnexion();
     echo '<script src="js/javascript.js"></script>';
     $get_url = $_SERVER['REQUEST_URI'];
     $idAChercher = "";
@@ -185,16 +183,7 @@ function psswdHash($mdp)
 }
 
 //fonction qui vérifie si l'utilisateur est bel et bien connecté sur le compte administrateur. dans le cas contraire, il est redirigé vers l'index
-function testConnexion()
-{
-    if ($_SESSION['estConnecte'] == null) {
-        header('Location: index.php');
-    }
-    $get_url = $_SERVER['REQUEST_URI'];
-    if (stripos($get_url, "upload")) {
-        header('Location: index.php');
-    }
-}
+function testConnexion(){if ($_SESSION['estConnecte']==null)header('Location:index.php');}
 
 //!AJOUTER UN JOUEUR
 
@@ -218,14 +207,14 @@ function joueurIdentique($numeroLicence)
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qJoueurIdentique']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour verifier si un joueur existe deja');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
         ':numeroLicence' =>($numeroLicence)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour verifier si un joueur existe deja');
+        die('Erreur !');
     }
     return $req->rowCount(); // si ligne > 0 alors joueur deja dans la BD
 }
@@ -239,7 +228,7 @@ function ajouterJoueur($nom, $prenom, $numeroLicence, $photo, $dateNaissance, $t
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAjouterJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un joueur a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -255,7 +244,7 @@ function ajouterJoueur($nom, $prenom, $numeroLicence, $photo, $dateNaissance, $t
         ':commentaires' => clean($commentaires)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour ajouter un joueur a la BD');
+        die('Erreur !');
     }
 }
 
@@ -300,12 +289,12 @@ function AfficherJoueurs() {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherJoueurs']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute();
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // permet de parcourir toutes les lignes de la requete
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -372,14 +361,14 @@ function AfficherImageJoueur($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qRecupererImageJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour recuperer la photo d\'un joueur ');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
         ':idJoueur' => clean($idJoueur)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour recuperer la photo d\'un joueur ');
+        die('Erreur !');
     }
     // permet de parcourir toutes les lignes de la requete
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -402,12 +391,12 @@ function afficherUnJoueur($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherUnJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // permet de parcourir la ligne de la requetes 
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -514,7 +503,7 @@ function modifierJoueur($photo, $nom, $prenom, $numeroLicence, $dateNaissance, $
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qModifierInformationsJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un joueur ');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -531,7 +520,7 @@ function modifierJoueur($photo, $nom, $prenom, $numeroLicence, $dateNaissance, $
         ':idJoueur' => clean($idJoueur)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un joueur ');
+        die('Erreur !');
     }
 }
 
@@ -546,12 +535,12 @@ function supprimerJoueur($idJoueur)
     }
     $req = $linkpdo->prepare($GLOBALS['qSupprimerJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour supprimer un joueur de la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour supprimer un joueur de la BD');
+        die('Erreur !');
     }
 }
 
@@ -563,14 +552,14 @@ function supprimerImageJoueur($idJoueur)
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qSupprimerImageJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un Joueur ');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
         ':idJoueur' => clean($idJoueur)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un Joueur ');
+        die('Erreur !');
     }
     // permet de parcourir toutes les lignes de la requete
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -592,7 +581,7 @@ function matchIdentique($date, $nom, $lieu)
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qmatchIdentique']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour verifier si un match existe deja');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -601,7 +590,7 @@ function matchIdentique($date, $nom, $lieu)
         ':lieuRencontre' => clean($lieu)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour verifier si un match existe deja');
+        die('Erreur !');
     }
     return $req->rowCount(); // si ligne > 0 alors joueur deja dans la BD
 }
@@ -615,7 +604,7 @@ function ajouterMatch($date, $nom, $lieu, $resultat)
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAjouterMatch']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un match a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -625,7 +614,7 @@ function ajouterMatch($date, $nom, $lieu, $resultat)
         ':resultat' => $resultat
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour ajouter un match a la BD');
+        die('Erreur !');
     }
 }
 
@@ -636,12 +625,12 @@ function AfficherMatchs() {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherMatchs']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des matchs');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute();
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des matchs');
+        die('Erreur !');
     }
     $idMatch=0;
     // permet de parcourir toutes les lignes de la requete
@@ -710,12 +699,12 @@ function afficherUnMatch($idMatch) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherUnMatch']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher un match a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour afficher un match a la BD');
+        die('Erreur !');
     }
     // permet de parcourir la ligne de la requetes 
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -759,7 +748,7 @@ function modifierMatch($nomAdversaire, $dateHeureMatch, $lieuRencontre, $resulta
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qModifierInformationsMatch']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un match');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -770,7 +759,7 @@ function modifierMatch($nomAdversaire, $dateHeureMatch, $lieuRencontre, $resulta
         ':idMatch' => clean($idMatch)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un match');
+        die('Erreur !');
     }
 }
 
@@ -781,7 +770,7 @@ function entrerResultats($resultat, $idMatch) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qEntrerResultats']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour permet de modifier les informations d\'un match');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -789,7 +778,7 @@ function entrerResultats($resultat, $idMatch) {
         ':idMatch' => clean($idMatch)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour permet de modifier les informations d\'un match');
+        die('Erreur !');
     }
     $req->debugDumpParams();
 }
@@ -802,12 +791,12 @@ function supprimerMatch($idMatch)
     //on supprime le membre
     $req = $linkpdo->prepare($GLOBALS['qSupprimerMatch']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour supprimer un match de la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour supprimer un match de la BD');
+        die('Erreur !');
     }
 }
 
@@ -820,12 +809,12 @@ function afficherUnMatchFeuille($idMatch) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherUnMatch']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher un match a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour afficher un match a la BD');
+        die('Erreur !');
     }
     // permet de parcourir la ligne de la requetes 
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -858,12 +847,12 @@ function AfficherJoueursSelection($idMatch) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherSelectionMatch']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     if($req->rowCount() == 0) {
         echo '<p class="msgSelection">Aucun joueur selectionne pour le moment.</p>';
@@ -918,12 +907,12 @@ function AfficherJoueursDispos($idMatch) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherJoueursDispos']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // permet de parcourir toutes les lignes de la requete
     while ($data = $req->fetch(PDO::FETCH_ASSOC)) {
@@ -968,7 +957,7 @@ function ajouterJoueurASelection($idJoueur, $idMatch, $notation, $role)
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAjouterASelection']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un match a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -978,7 +967,7 @@ function ajouterJoueurASelection($idJoueur, $idMatch, $notation, $role)
         ':role' => clean($role)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour ajouter un match a la BD');
+        die('Erreur !');
     }
 }
 
@@ -990,7 +979,7 @@ function retirerJoueurASelection($idJoueur, $idMatch)
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qRetirerASelection']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un match a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(
@@ -998,7 +987,7 @@ function retirerJoueurASelection($idJoueur, $idMatch)
         ':idMatch' => clean($idMatch)
     ));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors l\'execution de la requete pour ajouter un match a la BD');
+        die('Erreur !');
     }
 }
 
@@ -1009,12 +998,12 @@ function nbJoueurs() {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qNbJoueurs']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute();
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     $res = $req->fetch();
     return $res[0];
@@ -1027,12 +1016,12 @@ function compterJoueursIndispos() {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qJoueursIndisponibles']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute();
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     return $req->rowCount();
 }
@@ -1044,12 +1033,12 @@ function MatchValide($idMatch) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qMatchValide']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour afficher les informations des joueurs');
+        die('Erreur !');
     }
     return $req->rowCount();
 }
@@ -1063,12 +1052,12 @@ function afficherStatsUnJoueur($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qAfficherStatsUnJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     echo '<p id="noteJoueur"> Note moyenne : ' . MoyenneUnJoueur($idJoueur).'/5</p>';
     if(nombreDeMatchsUnJoueur($idJoueur)!=0) {
@@ -1110,12 +1099,12 @@ function selectionsTitulaire($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qSelectionsTitulaire']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     return $req->rowCount();
 }
@@ -1125,12 +1114,12 @@ function selectionsRemplacant($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qSelectionsRemplacant']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     return $req->rowCount();
 }
@@ -1140,12 +1129,12 @@ function MoyenneUnJoueur($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qMoyenneUnJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     $moyenne = $req->fetch();
     return round($moyenne[0],1,PHP_ROUND_HALF_EVEN);
@@ -1158,12 +1147,12 @@ function VictoiresEquipe() {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qVictoires']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute();
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     $res = $req->fetch();
     return $res[0];
@@ -1175,12 +1164,12 @@ function DefaitesEquipe() {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qDefaites']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute();
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     $res = $req->fetch();
     return $res[0];
@@ -1192,12 +1181,12 @@ function matchPerdu($idMatch) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qMatchPerdu']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idMatch' => clean($idMatch)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     if($req->rowCount() != 0) {
         return 1;
@@ -1212,12 +1201,12 @@ function nombreDeMatchsUnJoueur($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qMatchsPourUnJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     $res = $req->fetch();
     return $res[0];
@@ -1228,12 +1217,12 @@ function nombreMatchsGagnesUnJoueur($idJoueur) {
     // preparation de la requete sql
     $req = $linkpdo->prepare($GLOBALS['qMatchsVictoirePourUnJoueur']);
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de la preparation de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     // execution de la requete sql
     $req->execute(array(':idJoueur' => clean($idJoueur)));
     if ($req == false) {
-        die('Erreur ! Il y a un probleme lors de l\'execution de la requete pour ajouter un membre a la BD');
+        die('Erreur !');
     }
     $res = $req->fetch();
     return $res[0];
